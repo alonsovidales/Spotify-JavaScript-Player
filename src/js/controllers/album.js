@@ -5,7 +5,10 @@ var Album_Controller = (function(inId) {
 		getDetailView: function() {
 			var view = new TemplatesManager_Tool('album.tpl');
 
-			return view.process(albumInfo);
+			var htmlResult = view.process(albumInfo);
+			console.log(htmlResult);
+
+			document.getElementById('details_div').innerHTML = htmlResult;
 		},
 
 		getRowView: function() {

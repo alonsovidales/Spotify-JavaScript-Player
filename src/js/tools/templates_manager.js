@@ -24,32 +24,21 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		var result = inTemplate;
 		var prefix = inPrefix;
 
-		console.log('------ Processing for: ' + inPrefix);
-		console.log({
-			'template': inTemplate,
-			'params': inParams});
-
 		// Process all the objects that can be loops
 		for (var param in inParams) {
 			if (typeof(inParams[param]) == 'object') {
-				console.log("PARAM: " + param);
 				var loopPattern = new RegExp('\\{for (\\w+) in ' + prefix + param + '\\}.*\\{\\/for\\}', 'g');
 				var loops = loopPattern.exec(result);
-				console.log(loops);
 
-				for (var count = 0; count < loops.length; count += 2) {
-					var loopContent = '';
-					for (loopParam in inParams[param]) {
-						loopContent += processTemplate(loops[count], inParams[param][loopParam], inPrefix + loops[count + 1] + '.');
+				if (loops !== null) {
+					for (var count = 0; count < loops.length; count += 2) {
+						var loopContent = '';
+						for (loopParam in inParams[param]) {
+							loopContent += processTemplate(loops[count], inParams[param][loopParam], inPrefix + loops[count + 1] + '.');
+						}
+	
+						result = result.replace(loops[count], loopContent);
 					}
-
-					/*console.log("REPLACE: ");
-					console.log({
-						from: loops[count],
-						to: loopContent});*/
-					loopContent = loopContent.replace(/\{for \w+ in \w+\}/g, '');
-					loopContent = loopContent.replace(/\{\/for\}/g, '');
-					result = result.replace(loops[count], loopContent);
 				}
 			}
 		}
@@ -58,8 +47,9 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		for (var param in inParams) {
 			if (typeof(inParams[param]) != 'object') {
 				if (typeof(inParams[param]) == 'boolean') {
-					if (inParams[param]) {
-						
+					var ifPattern = new RegExp('\\{if #' + prefix + param + '#\\}.*\\{\\/if\\}', 'g');
+					if (!inParams[param]) {
+						result = result.replace(ifPattern, '');
 					}
 					result = replaceAll(result, '#' + prefix + param + '#', htmlEntities(inParams[param]));
 				} else {
@@ -67,6 +57,11 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 				}
 			}
 		}
+
+		result = result.replace(/\{for [^\}]* in [^\}]*\}/g, '');
+		result = result.replace(/\{\/for\}/g, '');
+		result = result.replace(/\{if [^\}]*\}/g, '');
+		result = result.replace(/\{\/if\}/g, '');
 
 		return result;
 	};
@@ -82,8 +77,6 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 					return false;
 				}
 
-				console.log('Loaded');
-
 				templateContent = replaceAll(this.response, "\n", '');
 			};
 			xhr.send();
@@ -92,7 +85,6 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		},
 
 		process: function(inParams) {
-			console.log(inParams);
 			return processTemplate(templateContent, inParams, '');
 		}
 	}

@@ -103,16 +103,18 @@ var apiConnectorObj_Tool = (function () {
 
 			for (track in inParams.album.tracks) {
 				var artists = [];
-				for (artist in inParams.album.tracks[track].artist) {
+				console.log(inParams.album.tracks[track]);
+				for (artist in inParams.album.tracks[track].artists) {
 					artists.push({
-						'href': inParams.album.tracks[track].artist[artist].href,
-						'name': inParams.album.tracks[track].artist[artist].name
+						'href': inParams.album.tracks[track].artists[artist].href,
+						'name': inParams.album.tracks[track].artists[artist].name
 					});
 				}
 
 				result.tracks.push({
 					'available': inParams.album.tracks[track].available,
 					'href': inParams.album.tracks[track].href,
+					'name': inParams.album.tracks[track].name,
 					'artists': artists
 				});
 			}
