@@ -1,0 +1,40 @@
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-02-13
+  */
+
+html, body {
+	background: #b3c35a;
+	color: #2b5809;
+}
+
+#main_canvas {
+	width: 800px;
+	height: 950px;
+}
+
+#player_div {
+	float: left;
+	width: 400px;
+	height: 40px;
+}
+
+#searchbox_div {
+	width: 380px;
+	height: 40px;
+	float: right;
+}
+
+#playlists_div {
+	float: left;
+	height: 540px;
+	width: 180px;
+	overflow: scroll;
+}
+
+#details_div {
+	width: 610px;
+	height: 540px;
+	float: right;
+	overflow: scroll;
+}

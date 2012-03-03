@@ -1,4 +1,4 @@
-var ApiConnector_Tool = (function () {
+var apiConnectorObj_Tool = (function () {
 	// This var will be used to store the information processed in order to don't
 	// need process it again
 	var cachedQueries = {};
