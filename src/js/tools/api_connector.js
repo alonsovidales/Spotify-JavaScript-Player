@@ -162,7 +162,7 @@ var apiConnectorObj_Tool = (function () {
 		}
 	};
 
-	var doAjaxRequest = function(inUrl, inCacheKey, inFormatter, inCallBack) {
+	var doAjaxRequest = function(inUrl, inCacheKey, inFormatter, inAsync, inCallBack) {
 		if (cachedQueries[inCacheKey] !== undefined) {
 			inCallBack(cachedQueries[inCacheKey]);
 
@@ -170,7 +170,7 @@ var apiConnectorObj_Tool = (function () {
 		}
 
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', inUrl);
+		xhr.open('GET', inUrl, inAsync);
 		xhr.onload = function(e) {
 			switch (this.status) {
 				case 200:
@@ -193,13 +193,14 @@ var apiConnectorObj_Tool = (function () {
 					new Alert_Tool('Internal server error');
 					break;
 			}
-		}
+		};
+
 		xhr.send();
 
 		return xhr;
 	};
 
-	var doApiLookupRequest = function(inTypeFormatter, inId, inCallBack) {
+	var doApiLookupRequest = function(inTypeFormatter, inId, inAsync, inCallBack) {
 		var cacheKey = 'lookup_' + inId + '_' + inTypeFormatter;
 
 		var extras = '';
@@ -212,7 +213,7 @@ var apiConnectorObj_Tool = (function () {
 
 		var url = config.apiBaseUrl + 'lookup/1/.json?uri=' + inId + extras;
 
-		return doAjaxRequest(url, cacheKey, inTypeFormatter, inCallBack);
+		return doAjaxRequest(url, cacheKey, inTypeFormatter, inAsync, inCallBack);
 	};
 
 	/**
@@ -221,36 +222,36 @@ var apiConnectorObj_Tool = (function () {
 	  * and the response from the server, that should be 
 	  * processed by the methos who calls this
 	  */
-	var doApiSearchRequest = function(inType, inQuery, inPage, inFormatter, inCallBack) {
+	var doApiSearchRequest = function(inType, inQuery, inPage, inFormatter, inAsync, inCallBack) {
 		var cacheKey = 'search_' + inType + '_' + inQuery + '_' + inPage + '_' + inFormatter;
 		var url = config.apiBaseUrl + 'search/1/' + inType + '.json?q=' + inQuery + '&page=' + inPage;
 
-		return doAjaxRequest(url, cacheKey, inFormatter, inCallBack);
+		return doAjaxRequest(url, cacheKey, inFormatter, inAsync, inCallBack);
 	};
 
 	return {
-		searchAlbums: function(inSearchStr, inPage, inCallBack) {
-			return doApiSearchRequest('album', inSearchStr, inPage, 'searchAlbum', inCallBack);
+		searchAlbums: function(inSearchStr, inPage, inAsync, inCallBack) {
+			return doApiSearchRequest('album', inSearchStr, inPage, 'searchAlbum', inAsync, inCallBack);
 		},
 
-		searchArtists: function(inSearchStr, inPage, inCallBack) {
-			return doApiSearchRequest('artist', inSearchStr, inPage, 'searchArtist', inCallBack);
+		searchArtists: function(inSearchStr, inPage, inAsync, inCallBack) {
+			return doApiSearchRequest('artist', inSearchStr, inPage, 'searchArtist', inAsync, inCallBack);
 		},
 
-		searchTracks: function(inSearchStr, inPage, inCallBack) {
-			return doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inCallBack);
+		searchTracks: function(inSearchStr, inPage, inAsync, inCallBack) {
+			return doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inAsync, inCallBack);
 		},
 
-		getAlbumInfo: function(inAlbumId, inCallBack) {
-			return doApiLookupRequest('album', inAlbumId, inCallBack);
+		getAlbumInfo: function(inAlbumId, inAsync, inCallBack) {
+			return doApiLookupRequest('album', inAlbumId, inAsync, inCallBack);
 		},
 
-		getArtistInfo: function(inArtistId, inCallBack) {
-			return doApiLookupRequest('artist', inArtistId, inCallBack);
+		getArtistInfo: function(inArtistId, inAsync, inCallBack) {
+			return doApiLookupRequest('artist', inArtistId, inAsync, inCallBack);
 		},
 
-		getTrackInfo: function(inTrackId, inCallBack) {
-			return doApiLookupRequest('track', inTrackId, inCallBack);
+		getTrackInfo: function(inTrackId, inAsync, inCallBack) {
+			return doApiLookupRequest('track', inTrackId, inAsync, inCallBack);
 		}
 	};
 })();
