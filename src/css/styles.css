@@ -38,3 +38,32 @@ html, body {
 	float: right;
 	overflow: scroll;
 }
+
+#searchbox_input {
+	width: 200px;
+	height: 20px;
+	font-family: sans-serif;
+	font-size: 15px;
+	border-radius: 10px;
+}
+
+#searchbox_type {
+	height: 20px;
+	font-family: sans-serif;
+	font-size: 15px;
+	border-radius: 10px;
+}
+
+#search_image {
+	padding-left: 10px;
+	width: 25px;
+}
+
+#searchbox_elements li {
+	float: left;
+	list-style: none;
+}
+
+#searchbox_autocomplete {
+	position: absolute;
+}

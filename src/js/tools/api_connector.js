@@ -14,7 +14,6 @@ var apiConnectorObj_Tool = (function () {
 	  */	
 	var formatters = {
 		'searchAlbum': function(inParams) {
-			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
 				'albums': []
@@ -24,7 +23,6 @@ var apiConnectorObj_Tool = (function () {
 				var albumArtists = [];
 
 				for (var artist in inParams.albums[album].artists) {
-					console.log(inParams.albums[album].artists[artist]);
 					albumArtists.push({
 						'href': inParams.albums[album].artists[artist].href,
 						'name': inParams.albums[album].artists[artist].name
@@ -96,14 +94,14 @@ var apiConnectorObj_Tool = (function () {
 			var result = {
 				'name': inParams.album.name,
 				'artistName': inParams.album.artist,
-				'artistId': inParams.album['artist-id'],
+				'href': inParams.album['artist-id'],
 				'released': inParams.album.released,
 				'tracks': []
 			};
 
 			for (track in inParams.album.tracks) {
 				var artists = [];
-				console.log(inParams.album.tracks[track]);
+
 				for (artist in inParams.album.tracks[track].artists) {
 					artists.push({
 						'href': inParams.album.tracks[track].artists[artist].href,
@@ -130,9 +128,9 @@ var apiConnectorObj_Tool = (function () {
 			for (album in inParams.artist.albums) {
 				result.albums.push({
 					'href': inParams.artist.albums[album].album.href,
+					'name': inParams.artist.albums[album].album.name,
 					'artist': inParams.artist.albums[album].album.artist,
-					'artistId': inParams.artist.albums[album].album['artist-id'],
-					'name': inParams.artist.albums[album].album.name
+					'artistHref': inParams.artist.albums[album].album['artist-id']
 				});
 			}
 
@@ -146,11 +144,9 @@ var apiConnectorObj_Tool = (function () {
 				'length': inParams.track.length,
 				'name': inParams.track.name,
 				'artists': [],
-				'album': {
-					'released': inParams.track.album.released,
-					'href': inParams.track.album.href,
-					'name': inParams.track.album.name
-				}
+				'albumReleased': inParams.track.album.released,
+				'albumHref': inParams.track.album.href,
+				'albumName': inParams.track.album.name
 			};
 
 			for (artist in inParams.track.artists) {

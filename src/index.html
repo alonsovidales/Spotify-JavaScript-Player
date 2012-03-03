@@ -14,7 +14,10 @@
 		<script src="js/tools/key_value_storage.js"></script>
 		<script src="js/tools/api_connector.js"></script>
 		<script src="js/tools/templates_manager.js"></script>
+		<script src="js/controllers/panels.js"></script>
+		<script src="js/controllers/track.js"></script>
 		<script src="js/controllers/album.js"></script>
+		<script src="js/controllers/artist.js"></script>
 	</head>
 	<body>
 		<div id="main_canvas">
@@ -23,7 +26,22 @@
 					player
 				</div>
 				<div id="searchbox_div">
-					searchbox_div
+					<ul id="searchbox_elements">
+						<li>
+							<select id="searchbox_type">
+								<option value="album">Album</option>
+								<option value="artist">Artists</option>
+								<option value="track">Tracks</option>
+							</select>
+						</li>
+						<li>
+							<input type="text" id="searchbox_input" value="Search..." />
+							<ul id="searchbox_autocomplete"><li>empty</li></ul>
+						</li>
+						<li>
+							<a href="javascript:void(0);" id="search_link"><img src="img/search.png" id="search_image" /></a>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div id="body_div">
@@ -36,7 +54,7 @@
 			</div>
 		</div>
 		<script>
-			// spotify_player.bootstrap();
+			window.onload = PanelsObj_Controller.bootstrap();
 		</script>
 	</body>
 </html>

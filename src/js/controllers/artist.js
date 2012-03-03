@@ -1,11 +1,11 @@
-var Album_Controller = (function(inId) {
-	var albumInfo = null;
+var Artist_Controller = (function(inId) {
+	var artistInfo = null;
 
 	var my = {
 		getDetailView: function() {
-			var view = new TemplatesManager_Tool('album.tpl');
+			var view = new TemplatesManager_Tool('artist.tpl');
 
-			var htmlResult = view.process(albumInfo);
+			var htmlResult = view.process(artistInfo);
 
 			return htmlResult;
 		},
@@ -18,8 +18,8 @@ var Album_Controller = (function(inId) {
 
 		constructor: function(inId) {
 			// Load the information from the API
-			apiConnectorObj_Tool.getAlbumInfo(inId, false, function (inValues) {
-				albumInfo = inValues;
+			apiConnectorObj_Tool.getArtistInfo(inId, false, function (inValues) {
+				artistInfo = inValues;
 			});
 
 			return this;
