@@ -19,8 +19,10 @@ var Album_Controller = (function(inId) {
 			apiConnectorObj_Tool.getAlbumInfo(inId, false, function (inValues) {
 				albumInfo = inValues;
 			});
+
+			return this;
 		}
 	};
 
-	return my.constructor();
+	return my.constructor(inId);
 });
