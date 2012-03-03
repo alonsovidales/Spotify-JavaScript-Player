@@ -14,26 +14,28 @@ var ApiConnector_Tool = (function () {
 	  */	
 	var formatters = {
 		'searchAlbum': function(inParams) {
+			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
-				'albums': {}
+				'albums': []
 			};
 
-			for (album in inParams.albums) {
-				var albumArtists = {};
+			for (var album in inParams.albums) {
+				var albumArtists = [];
 
-				for (artist in album.artists) {
-					albumArtists.append({
-						'href': artist.href,
-						'name': artist.name
+				for (var artist in inParams.albums[album].artists) {
+					console.log(inParams.albums[album].artists[artist]);
+					albumArtists.push({
+						'href': inParams.albums[album].artists[artist].href,
+						'name': inParams.albums[album].artists[artist].name
 					});
 				}
 
 				// We will not use the availability
-				result.albums.append({
-					'name': album.name,
-					'popularity': album.popularity,
-					'href': album.href,
+				result.albums.push({
+					'name': inParams.albums[album].name,
+					'popularity': inParams.albums[album].popularity,
+					'href': inParams.albums[album].href,
 					'artists': albumArtists
 				});
 			}
@@ -44,14 +46,14 @@ var ApiConnector_Tool = (function () {
 		'searchArtist': function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
-				'artists': {}
+				'artists': []
 			};
 
-			for (artist in inParams.artists) {
-				result.artists.append({
-					'href': artist.href,
-					'name': artist.name,
-					'popularity': artist.popularity
+			for (var artist in inParams.artists) {
+				result.artists.push({
+					'href': inParams.artists[artist].href,
+					'name': inParams.artists[artist].name,
+					'popularity': inParams.artists[artist].popularity
 				});
 			}
 
@@ -61,29 +63,98 @@ var ApiConnector_Tool = (function () {
 		'searchTrack': function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
-				'tracks': {}
+				'tracks': []
 			};
 
-			for (track in inParams.tracks) {
-				var artists = {};
-				for (artist in track.artists) {
-					artists.append({
-						'href': artist.href,
-						'name': artist.name
+			for (var track in inParams.tracks) {
+				var artists = [];
+				for (var artist in inParams.tracks[track].artists) {
+					artists.push({
+						'href': inParams.tracks[track].artists[artist].href,
+						'name': inParams.tracks[track].artists[artist].name
 					});
 				}
 
-				result.tracks.append({
+				result.tracks.push({
 					'album': {
-						'released': track.album.released,
-						'href': track.album.href,
-						'name': track.album.name
+						'released': inParams.tracks[track].album.released,
+						'href': inParams.tracks[track].album.href,
+						'name': inParams.tracks[track].album.name
 					},
-					'name': track.name,
-					'popularity': track.popularity,
-					'length': track.popularity,
-					'trackNumber': track.track-number,
+					'name': inParams.tracks[track].name,
+					'popularity': inParams.tracks[track].popularity,
+					'length': inParams.tracks[track].popularity,
+					'trackNumber': inParams.tracks[track]['track-number'],
 					'artists': artists
+				});
+			}
+
+			return result;
+		},
+
+		'album': function(inParams) {
+			var result = {
+				'name': inParams.album.name,
+				'artistName': inParams.album.artist,
+				'artistId': inParams.album['artist-id'],
+				'released': inParams.album.released,
+				'tracks': []
+			};
+
+			for (track in inParams.album.tracks) {
+				var artists = [];
+				for (artist in inParams.album.tracks[track].artist) {
+					artists.push({
+						'href': inParams.album.tracks[track].artist[artist].href,
+						'name': inParams.album.tracks[track].artist[artist].name
+					});
+				}
+
+				result.tracks.push({
+					'available': inParams.album.tracks[track].available,
+					'href': inParams.album.tracks[track].href,
+					'artists': artists
+				});
+			}
+
+			return result;
+		},
+
+		'artist': function(inParams) {
+			var result = {
+				'name': inParams.artist.name,
+				'albums': []};
+
+			for (album in inParams.artist.albums) {
+				result.albums.push({
+					'href': inParams.artist.albums[album].album.href,
+					'artist': inParams.artist.albums[album].album.artist,
+					'artistId': inParams.artist.albums[album].album['artist-id'],
+					'name': inParams.artist.albums[album].album.name
+				});
+			}
+
+			return result;
+		},
+
+		'track': function(inParams) {
+			var result = {
+				'available': inParams.track.available,
+				'popularity': inParams.track.popularity,
+				'length': inParams.track.length,
+				'name': inParams.track.name,
+				'artists': [],
+				'album': {
+					'released': inParams.track.album.released,
+					'href': inParams.track.album.href,
+					'name': inParams.track.album.name
+				}
+			};
+
+			for (artist in inParams.track.artists) {
+				result.artists.push({
+					'name': inParams.track.artists[artist].name,
+					'href': inParams.track.artists[artist].href
 				});
 			}
 
@@ -91,29 +162,23 @@ var ApiConnector_Tool = (function () {
 		}
 	};
 
-	/**
-	  * This method encapsulates all the search requests,
-	  * all have the same structure, only changes the type
-	  * and the response from the server, that should be 
-	  * processed by the methos who calls this
-	  */
-	var doApiSearchRequest = function(inType, inQuery, inPage, inFormatter, inCallBack) {
-		var url = config.apiBaseUrl + 'search/1/' + inType + '.json?q=' + inQuery + '&page=' + inPage;
+	var doAjaxRequest = function(inUrl, inCacheKey, inFormatter, inCallBack) {
+		if (cachedQueries[inCacheKey] !== undefined) {
+			inCallBack(cachedQueries[inCacheKey]);
+
+			return false;
+		}
 
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', url);
+		xhr.open('GET', inUrl);
 		xhr.onload = function(e) {
-			var data = null;
-
 			switch (this.status) {
 				case 200:
-					data = JSON.parse(this.response);
-					cachedQueries[inType + '_' + inQuery + '_' + inPage] = formatters[inFormatter](data);
-					break;
-
-				// Get the info from the cache to don't need parse the JSON again
 				case 304:
-					inCallBack(cachedQueries[inType + '_' + inQuery + '_' + inPage]);
+					var data = JSON.parse(this.response);
+					cachedQueries[inCacheKey] = formatters[inFormatter](data);
+
+					inCallBack(cachedQueries[inCacheKey]);
 					break;
 
 				case 503:
@@ -134,32 +199,58 @@ var ApiConnector_Tool = (function () {
 		return xhr;
 	};
 
+	var doApiLookupRequest = function(inTypeFormatter, inId, inCallBack) {
+		var cacheKey = 'lookup_' + inId + '_' + inTypeFormatter;
+
+		var extras = '';
+		if (inTypeFormatter == 'album') {
+			extras = '&extras=track';
+		}
+		if (inTypeFormatter == 'artist') {
+			extras = '&extras=album';
+		}
+
+		var url = config.apiBaseUrl + 'lookup/1/.json?uri=' + inId + extras;
+
+		return doAjaxRequest(url, cacheKey, inTypeFormatter, inCallBack);
+	};
+
+	/**
+	  * This method encapsulates all the search requests,
+	  * all have the same structure, only changes the type
+	  * and the response from the server, that should be 
+	  * processed by the methos who calls this
+	  */
+	var doApiSearchRequest = function(inType, inQuery, inPage, inFormatter, inCallBack) {
+		var cacheKey = 'search_' + inType + '_' + inQuery + '_' + inPage + '_' + inFormatter;
+		var url = config.apiBaseUrl + 'search/1/' + inType + '.json?q=' + inQuery + '&page=' + inPage;
+
+		return doAjaxRequest(url, cacheKey, inFormatter, inCallBack);
+	};
+
 	return {
 		searchAlbums: function(inSearchStr, inPage, inCallBack) {
-			var result = doApiSearchRequest('album', inSearchStr, inPage, 'searchAlbum', inCallBack);
-
-			console.log(result);
+			return doApiSearchRequest('album', inSearchStr, inPage, 'searchAlbum', inCallBack);
 		},
 
 		searchArtists: function(inSearchStr, inPage, inCallBack) {
-			var result = doApiSearchRequest('artist', inSearchStr, inPage, 'searchArtist', inCallBack);
-
-			console.log(result);
+			return doApiSearchRequest('artist', inSearchStr, inPage, 'searchArtist', inCallBack);
 		},
 
 		searchTracks: function(inSearchStr, inPage, inCallBack) {
-			var result = doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inCallBack);
-
-			console.log(result);
+			return doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inCallBack);
 		},
 
-		getAlbumInfo: function(inAlbumId) {
+		getAlbumInfo: function(inAlbumId, inCallBack) {
+			return doApiLookupRequest('album', inAlbumId, inCallBack);
 		},
 
-		getArtistInfo: function(inArtistId) {
+		getArtistInfo: function(inArtistId, inCallBack) {
+			return doApiLookupRequest('artist', inArtistId, inCallBack);
 		},
 
-		getTrackInfo: function(inTrackId) {
+		getTrackInfo: function(inTrackId, inCallBack) {
+			return doApiLookupRequest('track', inTrackId, inCallBack);
 		}
 	};
 })();
