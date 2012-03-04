@@ -18,6 +18,7 @@ var apiConnectorObj_Tool = (function () {
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.albums.length)); count++) {
 				results.push({
+					'type': 'album',
 					'href': inParams.albums[count].href,
 					'name': inParams.albums[count].name,
 					'popularity': inParams.albums[count].popularity,
@@ -32,6 +33,7 @@ var apiConnectorObj_Tool = (function () {
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.artists.length)); count++) {
 				results.push({
+					'type': 'artist',
 					'href': inParams.artists[count].href,
 					'name': inParams.artists[count].name,
 					'popularity': inParams.artists[count].popularity,
@@ -46,6 +48,7 @@ var apiConnectorObj_Tool = (function () {
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.tracks.length)); count++) {
 				results.push({
+					'type': 'track',
 					'href': inParams.tracks[count].href,
 					'name': inParams.tracks[count].name,
 					'popularity': inParams.tracks[count].popularity,
@@ -202,11 +205,11 @@ var apiConnectorObj_Tool = (function () {
 		}
 	};
 
-	var doAjaxRequest = function(inUrl, inCacheKey, inFormatter, inAsync, inCallBack) {
+	var doAjaxRequest = function(inUrl, inCacheKey, inAdapter, inAsync, inCallBack) {
 		if (cachedQueries[inCacheKey] !== undefined) {
 			inCallBack(cachedQueries[inCacheKey]);
 
-			return false;
+			return null;
 		}
 
 		var xhr = new XMLHttpRequest();
@@ -216,7 +219,7 @@ var apiConnectorObj_Tool = (function () {
 				case 200:
 				case 304:
 					var data = JSON.parse(this.response);
-					cachedQueries[inCacheKey] = adapters[inFormatter](data);
+					cachedQueries[inCacheKey] = adapters[inAdapter](data);
 
 					inCallBack(cachedQueries[inCacheKey]);
 					break;
@@ -240,20 +243,20 @@ var apiConnectorObj_Tool = (function () {
 		return xhr;
 	};
 
-	var doApiLookupRequest = function(inTypeFormatter, inId, inAsync, inCallBack) {
-		var cacheKey = 'lookup_' + inId + '_' + inTypeFormatter;
+	var doApiLookupRequest = function(inTypeAdapter, inId, inAsync, inCallBack) {
+		var cacheKey = 'lookup_' + inId + '_' + inTypeAdapter;
 
 		var extras = '';
-		if (inTypeFormatter == 'album') {
+		if (inTypeAdapter == 'album') {
 			extras = '&extras=track';
 		}
-		if (inTypeFormatter == 'artist') {
+		if (inTypeAdapter == 'artist') {
 			extras = '&extras=album';
 		}
 
 		var url = config.apiBaseUrl + 'lookup/1/.json?uri=' + inId + extras;
 
-		return doAjaxRequest(url, cacheKey, inTypeFormatter, inAsync, inCallBack);
+		return doAjaxRequest(url, cacheKey, inTypeAdapter, inAsync, inCallBack);
 	};
 
 	/**
@@ -262,11 +265,11 @@ var apiConnectorObj_Tool = (function () {
 	  * and the response from the server, that should be 
 	  * processed by the methos who calls this
 	  */
-	var doApiSearchRequest = function(inType, inQuery, inPage, inFormatter, inAsync, inCallBack) {
-		var cacheKey = 'search_' + inType + '_' + inQuery + '_' + inPage + '_' + inFormatter;
+	var doApiSearchRequest = function(inType, inQuery, inPage, inAdapter, inAsync, inCallBack) {
+		var cacheKey = 'search_' + inType + '_' + inQuery + '_' + inPage + '_' + inAdapter;
 		var url = config.apiBaseUrl + 'search/1/' + inType + '.json?q=' + inQuery + '&page=' + inPage;
 
-		return doAjaxRequest(url, cacheKey, inFormatter, inAsync, inCallBack);
+		return doAjaxRequest(url, cacheKey, inAdapter, inAsync, inCallBack);
 	};
 
 	return {
