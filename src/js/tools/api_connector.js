@@ -12,7 +12,49 @@ var apiConnectorObj_Tool = (function () {
 	  * an object with the API structure and should to return the structure to be used
 	  * internally
 	  */	
-	var formatters = {
+	var adapters = {
+		'autocompleteAlbumSearch': function(inParams) {
+			var results = [];
+
+			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.albums.length)); count++) {
+				results.push({
+					'href': inParams.albums[count].href,
+					'name': inParams.albums[count].name,
+					'popularity': inParams.albums[count].popularity,
+				});
+			}
+
+			return results;
+		},
+
+		'autocompleteArtistSearch': function(inParams) {
+			var results = [];
+
+			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.artists.length)); count++) {
+				results.push({
+					'href': inParams.artists[count].href,
+					'name': inParams.artists[count].name,
+					'popularity': inParams.artists[count].popularity,
+				});
+			}
+
+			return results;
+		},
+
+		'autocompleteTrackSearch': function(inParams) {
+			var results = [];
+
+			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.tracks.length)); count++) {
+				results.push({
+					'href': inParams.tracks[count].href,
+					'name': inParams.tracks[count].name,
+					'popularity': inParams.tracks[count].popularity,
+				});
+			}
+
+			return results;
+		},
+
 		'searchAlbum': function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
@@ -174,7 +216,7 @@ var apiConnectorObj_Tool = (function () {
 				case 200:
 				case 304:
 					var data = JSON.parse(this.response);
-					cachedQueries[inCacheKey] = formatters[inFormatter](data);
+					cachedQueries[inCacheKey] = adapters[inFormatter](data);
 
 					inCallBack(cachedQueries[inCacheKey]);
 					break;
@@ -238,6 +280,24 @@ var apiConnectorObj_Tool = (function () {
 
 		searchTracks: function(inSearchStr, inPage, inAsync, inCallBack) {
 			return doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inAsync, inCallBack);
+		},
+
+		autocompleteSearch: function(inType, inSearchStr, inCallBack) {
+			switch (inType) {
+				case 'album':
+					adapter = 'autocompleteAlbumSearch';
+					break;
+
+				case 'artist':
+					adapter = 'autocompleteArtistSearch';
+					break;
+
+				case 'track':
+					adapter = 'autocompleteTrackSearch';
+					break;
+			}
+
+			return doApiSearchRequest(inType, inSearchStr, 1, adapter, true, inCallBack);
 		},
 
 		getAlbumInfo: function(inAlbumId, inAsync, inCallBack) {

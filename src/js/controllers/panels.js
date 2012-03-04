@@ -41,6 +41,7 @@ var PanelsObj_Controller = (function () {
 		},
 
 		bootstrap: function() {
+			SearchBox_Controller.bootstrap();
 		}
 	};
 })();

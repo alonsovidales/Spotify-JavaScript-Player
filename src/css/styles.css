@@ -65,5 +65,6 @@ html, body {
 }
 
 #searchbox_autocomplete {
+	/*display: none;*/
 	position: absolute;
 }
