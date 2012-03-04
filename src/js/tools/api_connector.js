@@ -87,6 +87,7 @@ var apiConnectorObj_Tool = (function () {
 		},
 
 		'searchArtist': function(inParams) {
+			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
 				'artists': []
@@ -247,11 +248,12 @@ var apiConnectorObj_Tool = (function () {
 		}
 
 		var cacheKey = 'lookup_' + inId + '_' + inTypeAdapter;
-
 		var extras = '';
+
 		if (inTypeAdapter == 'album') {
 			extras = '&extras=track';
 		}
+
 		if (inTypeAdapter == 'artist') {
 			extras = '&extras=album';
 		}

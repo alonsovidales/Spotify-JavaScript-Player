@@ -5,11 +5,11 @@
 Total artists found #numResults#
 {/if #showHeader#}
 <ul>
-	{for artist in artists}
+	{for artist in #artists#}
 	<li>
 		Artist: <a href="#artist.href#" type="artist" class="info_link">#artist.name#</a>
 	</li>
-	{/for artists}
+	{/for #artists#}
 </ul>
 
 {if #showMore#}

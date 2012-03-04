@@ -4,10 +4,24 @@
 </h1>
 Total albums found #numResults#
 {/if #showHeader#}
+
 <ul>
 	{for album in #albums#}
 	<li>
-		Album: <a href="#album.href#" type="album" class="info_link">#album.name#</a>
+		<ul>
+			<li>
+				Album: <a href="#album.href#" type="album" class="info_link">#album.name#</a>
+			</li>
+			<li>
+				<ul>
+					{for artist in #album.artists#}
+					<li>
+						Artist: <a href="#album.artist.href#" type="artist" class="info_link">#album.artist.name#</a>
+					</li>
+					{/for #album.artists#}
+				</ul>
+			</li>
+		</ul>
 	</li>
 	{/for #albums#}
 </ul>
