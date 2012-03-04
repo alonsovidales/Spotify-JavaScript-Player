@@ -18,10 +18,16 @@ var PanelsObj_Controller = (function () {
 
 			for (paginator in paginatorLinks) {
 				paginatorLinks[paginator].onclick = function() {
-					this.classList.add('hd');
+					var linkElem = this;
 
-					PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), true, this.getAttribute('nextpage'));
-	
+					this.innerHTML = '<img src="img/loading.gif" />';
+
+					setTimeout(function() {
+						PanelsObj_Controller.showDetails(linkElem.getAttribute('type'), linkElem.getAttribute('href'), true, linkElem.getAttribute('nextpage'));
+
+						linkElem.classList.add('hd');
+					}, 1);
+
 					return false;
 				};
 			}

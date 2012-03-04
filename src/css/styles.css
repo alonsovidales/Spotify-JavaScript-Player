@@ -18,25 +18,28 @@ html, body {
 #player_div {
 	float: left;
 	width: 400px;
-	height: 40px;
+	height: 50px;
 }
 
 #searchbox_div {
 	width: 380px;
-	height: 40px;
+	height: 50px;
 	float: right;
 }
 
 #playlists_div {
 	float: left;
+	border-top: 1px solid #e6e6e6;
 	height: 540px;
 	width: 180px;
 	overflow: scroll;
 }
 
 #details_div {
+	border-top: 1px solid #e6e6e6;
+	border-left: 1px solid #e6e6e6;
 	width: 610px;
-	height: 540px;
+	height: 525px;
 	float: right;
 	overflow: scroll;
 }
@@ -104,4 +107,11 @@ ul#searchbox_autocomplete li a {
 
 a.show_more {
 	padding-bottom: 30px;
+}
+
+div.loading_div {
+	background-image: url('../img/loading.gif');
+	width: 32px;
+	height: 32px;
+	background-repeat: no-repeat;
 }

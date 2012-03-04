@@ -3,9 +3,9 @@
 	Tracks search result "#searchedVal#"
 </h1>
 Total tracks found #numResults#
-{/if}
+{/if #showHeader#}
 <ul>
-	{for track in tracks}
+	{for track in #tracks#}
 	<li>
 		<ul>
 			<li>
@@ -16,18 +16,18 @@ Total tracks found #numResults#
 			</li>
 			<li>
 				<ul>
-			{for artist in tracks.artists}
-			<li>
-				Artist: <a href="#track.artist.href#" type="artist" class="info_link">#track.artist.name#</a>
-			</li>
-			{/for}
+					{for artist in #track.artists#}
+					<li>
+						Artist: <a href="#track.artist.href#" type="artist" class="info_link">#track.artist.name#</a>
+					</li>
+					{/for #track.artists#}
 				</ul>
 			</li>
 		</ul>
 	</li>
-	{/for}
+	{/for #tracks#}
 </ul>
 
 {if #showMore#}
 <a href="#searchedVal#" nextpage="#nextPage#" type="searchResult_track" class="show_more">Show More</a>
-{/if}
+{/if #showMore#}

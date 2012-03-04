@@ -13,7 +13,7 @@ var SearchTrackResult_Controller = (function(inSearchStr) {
 
 			// Load the information from the API
 			apiConnectorObj_Tool.searchTracks(searchedStr, currentPage, false, function (inValues) {
-				var totalPages = Math.floor((inValues.tracks / config.resultsByPage) - 1);
+				var totalPages = Math.floor(inValues.numResults / config.resultsByPage) + 1;
 
 				htmlResult = view.process({
 					"showHeader": currentPage == 1,

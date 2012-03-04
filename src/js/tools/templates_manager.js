@@ -27,7 +27,7 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		// Process all the objects that can be loops
 		for (var param in inParams) {
 			if (typeof(inParams[param]) == 'object') {
-				var loopPattern = new RegExp('\\{for (\\w+) in ' + prefix + param + '\\}.*\\{\\/for\\}', 'g');
+				var loopPattern = new RegExp('\\{for (\\w+) in #' + prefix + param + '#\\}.+?\\{\\/for #' + prefix + param + '#\\}', 'g');
 				var loops = loopPattern.exec(result);
 
 				if (loops !== null) {
@@ -47,7 +47,7 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		for (var param in inParams) {
 			if (typeof(inParams[param]) != 'object') {
 				if (typeof(inParams[param]) == 'boolean') {
-					var ifPattern = new RegExp('\\{if #' + prefix + param + '#\\}(.+?)\\{\\/if\\}', 'g');
+					var ifPattern = new RegExp('\\{if #' + prefix + param + '#\\}(.+?)\\{\\/if #' + prefix + param + '#\\}', 'g');
 					if (!inParams[param]) {
 						result = result.replace(ifPattern, '');
 					}
@@ -59,9 +59,9 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		}
 
 		result = result.replace(/\{for [^\}]* in [^\}]*\}/g, '');
-		result = result.replace(/\{\/for\}/g, '');
+		result = result.replace(/\{\/for [^\}]*\}/g, '');
 		result = result.replace(/\{if [^\}]*\}/g, '');
-		result = result.replace(/\{\/if\}/g, '');
+		result = result.replace(/\{\/if [^\}]*\}/g, '');
 
 		return result;
 	};

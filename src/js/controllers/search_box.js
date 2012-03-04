@@ -125,7 +125,7 @@ var SearchBox_Controller = (function () {
 			defaultValue = searchBox.value;
 
 			// Add the events
-			searchBox.onkeydown = function(inEvent) {
+			searchBox.onkeyup = function(inEvent) {
 				switch(inEvent.keyCode) {
 					// Return key, submit
 					case 13:
