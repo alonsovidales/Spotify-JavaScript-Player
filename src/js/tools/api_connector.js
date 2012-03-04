@@ -244,6 +244,10 @@ var apiConnectorObj_Tool = (function () {
 	};
 
 	var doApiLookupRequest = function(inTypeAdapter, inId, inAsync, inCallBack) {
+		if (inId === '') {
+			return null;
+		}
+
 		var cacheKey = 'lookup_' + inId + '_' + inTypeAdapter;
 
 		var extras = '';
@@ -266,6 +270,10 @@ var apiConnectorObj_Tool = (function () {
 	  * processed by the methos who calls this
 	  */
 	var doApiSearchRequest = function(inType, inQuery, inPage, inAdapter, inAsync, inCallBack) {
+		if (inQuery === '') {
+			return null;
+		}
+
 		var cacheKey = 'search_' + inType + '_' + inQuery + '_' + inPage + '_' + inAdapter;
 		var url = config.apiBaseUrl + 'search/1/' + inType + '.json?q=' + inQuery + '&page=' + inPage;
 

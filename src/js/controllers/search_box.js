@@ -48,7 +48,7 @@ var SearchBox_Controller = (function () {
 		// Create a new threat to don't damage the user experience
 		setTimeout(PanelsObj_Controller.showDetails(
 			link.getAttribute('type'),
-			link.getAttribute('href')), 1);
+			link.getAttribute('href')), false, 1);
 
 		return inLiElement;
 	};
@@ -105,7 +105,10 @@ var SearchBox_Controller = (function () {
 	var search = function(inType, inValue) {
 		// If the value cames from the autocomplete (the info is yet loaded),
 		// or is an empy string, don't do anyting...
-		if ((inValue !== '') && (!valueFromAutocomplete)) {
+		if ((inValue !== '') && (!valueFromAutocomplete) && (inValue !== defaultValue)) {
+			PanelsObj_Controller.showDetails(
+				'searchResult_' + inType,
+				inValue, false, 1);
 		}
 
 		searchBox.blur();

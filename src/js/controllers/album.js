@@ -10,12 +10,6 @@ var Album_Controller = (function(inId) {
 			return htmlResult;
 		},
 
-		getRowView: function() {
-		},
-
-		getSearchView: function() {
-		},
-
 		constructor: function(inId) {
 			// Load the information from the API
 			apiConnectorObj_Tool.getAlbumInfo(inId, false, function (inValues) {

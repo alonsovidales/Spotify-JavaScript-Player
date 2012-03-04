@@ -12,12 +12,6 @@ var Track_Controller = (function(inId) {
 			return htmlResult;
 		},
 
-		getRowView: function() {
-		},
-
-		getSearchView: function() {
-		},
-
 		constructor: function(inId) {
 			// Load the information from the API
 			apiConnectorObj_Tool.getTrackInfo(inId, false, function (inValues) {

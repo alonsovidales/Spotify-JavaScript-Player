@@ -79,6 +79,9 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 
 				templateContent = replaceAll(this.response, "\n", '');
 			};
+			xhr.onerror = function(e) {
+				console.error('TemplatesManager_Tool: Problem getting the ' + inTemplateFile + ' template file');
+			}
 			xhr.send();
 
 			return this;
