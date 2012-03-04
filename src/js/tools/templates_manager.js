@@ -47,7 +47,7 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		for (var param in inParams) {
 			if (typeof(inParams[param]) != 'object') {
 				if (typeof(inParams[param]) == 'boolean') {
-					var ifPattern = new RegExp('\\{if #' + prefix + param + '#\\}.*\\{\\/if\\}', 'g');
+					var ifPattern = new RegExp('\\{if #' + prefix + param + '#\\}(.+?)\\{\\/if\\}', 'g');
 					if (!inParams[param]) {
 						result = result.replace(ifPattern, '');
 					}

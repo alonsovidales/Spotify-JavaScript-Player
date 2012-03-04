@@ -163,6 +163,10 @@ var SearchBox_Controller = (function () {
 			};
 
 			searchBox.onblur = function() {
+				if (currentAutocompleteReq !== null) {
+					currentAutocompleteReq.abort();
+				}
+
 				hideAutocomplete();
 				if (searchBox.value === '') {
 					searchBox.value = defaultValue;

@@ -18,6 +18,8 @@ var PanelsObj_Controller = (function () {
 
 			for (paginator in paginatorLinks) {
 				paginatorLinks[paginator].onclick = function() {
+					this.classList.add('hd');
+
 					PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), true, this.getAttribute('nextpage'));
 	
 					return false;

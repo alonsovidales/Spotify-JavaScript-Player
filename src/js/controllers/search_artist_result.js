@@ -1,10 +1,10 @@
-var SearchAlbumResult_Controller = (function(inSearchStr) {
+var SearchArtistResult_Controller = (function(inSearchStr) {
 	var searchedStr = '';
 
 	var my = {
 		getDetailView: function(inPage) {
 			console.log(inPage);
-			var view = new TemplatesManager_Tool('search_album_result.tpl');
+			var view = new TemplatesManager_Tool('search_artist_result.tpl');
 			var htmlResult = '';
 			var currentPage = inPage;
 
@@ -13,14 +13,15 @@ var SearchAlbumResult_Controller = (function(inSearchStr) {
 			}
 
 			// Load the information from the API
-			apiConnectorObj_Tool.searchAlbums(searchedStr, currentPage, false, function (inValues) {
+			apiConnectorObj_Tool.searchArtists(searchedStr, currentPage, false, function (inValues) {
+				console.log(inValues);
 				htmlResult = view.process({
 					"showHeader": currentPage == 1,
 					"showMore": currentPage == 1,
 					"searchedVal": searchedStr,
 					"nextPage": (currentPage + 1),
 					"numResults": inValues.numResults,
-					"albums": inValues.albums
+					"artists": inValues.artists
 				});
 			});
 

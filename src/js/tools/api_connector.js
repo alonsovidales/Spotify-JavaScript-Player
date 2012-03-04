@@ -119,11 +119,9 @@ var apiConnectorObj_Tool = (function () {
 				}
 
 				result.tracks.push({
-					'album': {
-						'released': inParams.tracks[track].album.released,
-						'href': inParams.tracks[track].album.href,
-						'name': inParams.tracks[track].album.name
-					},
+					'albumReleased': inParams.tracks[track].album.released,
+					'albumHref': inParams.tracks[track].album.href,
+					'albumName': inParams.tracks[track].album.name,
 					'name': inParams.tracks[track].name,
 					'popularity': inParams.tracks[track].popularity,
 					'length': inParams.tracks[track].popularity,
