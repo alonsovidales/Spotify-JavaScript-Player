@@ -125,7 +125,7 @@ var SearchBox_Controller = (function () {
 			defaultValue = searchBox.value;
 
 			// Add the events
-			searchBox.onkeyup = function(inEvent) {
+			searchBox.addEventListener('keyup', function(inEvent) {
 				switch(inEvent.keyCode) {
 					// Return key, submit
 					case 13:
@@ -150,19 +150,19 @@ var SearchBox_Controller = (function () {
 						}
 						break;
 				}
-			};
+			}, false);
 
-			searchBox.onfocus = function() {
+			searchBox.addEventListener('focus', function() {
 				hideAutocomplete();
-			};
+			}, false);
 
-			searchBox.onfocus = function() {
+			searchBox.addEventListener('focus', function() {
 				if (searchBox.value == defaultValue) {
 					searchBox.value = '';
 				}
-			};
+			}, false);
 
-			searchBox.onblur = function() {
+			searchBox.addEventListener('blur', function() {
 				if (currentAutocompleteReq !== null) {
 					currentAutocompleteReq.abort();
 				}
@@ -171,11 +171,11 @@ var SearchBox_Controller = (function () {
 				if (searchBox.value === '') {
 					searchBox.value = defaultValue;
 				}
-			};
+			}, false);
 
-			searchIcon.onclick = function() {
+			searchIcon.addEventListener('click', function() {
 				search(searchTypeSel.value, searchBox.value);
-			};
+			}, false);
 		}
 	};
 })();

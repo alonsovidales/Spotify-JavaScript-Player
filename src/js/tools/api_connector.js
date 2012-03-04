@@ -232,7 +232,7 @@ var apiConnectorObj_Tool = (function () {
 
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', inUrl, inAsync);
-		xhr.onload = function(e) {
+		xhr.addEventListener('load', function(e) {
 			switch (this.status) {
 				case 200:
 				case 304:
@@ -254,7 +254,7 @@ var apiConnectorObj_Tool = (function () {
 					new Alert_Tool('Internal server error');
 					break;
 			}
-		};
+		}, false);
 
 		xhr.send();
 

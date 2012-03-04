@@ -7,10 +7,10 @@ var KeyValueStorage_Abstract_Tool = (function() {
 		_objType: '',
 		_objId: '',
 
-		saveObject: function() {
+		_saveObject: function() {
 			try {
 				if ((this._objType != '') && (this._objId != '')) {
-					localStorage.setItem(this._objType + '_' + this._objId, JSON.stringify(this.values));
+					localStorage.setItem(this._objType + '_' + this._objId, JSON.stringify(this._values));
 				}
 			} catch (error) {
 				if (error == QUOTA_EXCEEDED_ERR) {
@@ -19,22 +19,26 @@ var KeyValueStorage_Abstract_Tool = (function() {
 			}
 		},
 
-		loadObject: function() {
+		_loadObject: function() {
 			if ((this._objType != '') && (this._objId != '')) {
-				this.values = JSON.parse(localStorage.getItem(this._objType + '_' + this._objId));
+				this._values = JSON.parse(localStorage.getItem(this._objType + '_' + this._objId));
 			} else {
 				console.error('Key error: Trying to load a object without _objType or _objId');
 			}
 		},
 
-		removeObject: function() {
+		_removeObject: function() {
 			localStorage.removeItem(this._objType + '_' + this._objId);
 		},
 
 		extend: function(inChild) {
 			for (var attr in this) {
-				inChild[attr] = this[attr];
+				if (inChild[attr] === undefined) {
+					inChild[attr] = this[attr];
+				}
 			}
+
+			return inChild;
 		}
 	};
-});
+})();

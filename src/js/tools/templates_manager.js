@@ -69,8 +69,9 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 	var my = {
 		constructor: function(inTemplateFile) {
 			var xhr = new XMLHttpRequest();
+			console.log(config.templatesDir + inTemplateFile);
 			xhr.open('GET', config.templatesDir + inTemplateFile, false);
-			xhr.onload = function(e) {
+			xhr.addEventListener('load', function(e) {
 				if (this.status != 200) {
 					console.error('TemplatesManager_Tool: Problem trying to load template from: ' + config.templatesDir + inTemplateFile);
 
@@ -78,10 +79,10 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 				}
 
 				templateContent = replaceAll(this.response, "\n", '');
-			};
-			xhr.onerror = function(e) {
+			}, false);
+			xhr.addEventListener('error', function(e) {
 				console.error('TemplatesManager_Tool: Problem getting the ' + inTemplateFile + ' template file');
-			}
+			}, false);
 			xhr.send();
 
 			return this;
