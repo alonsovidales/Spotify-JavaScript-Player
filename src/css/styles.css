@@ -110,8 +110,39 @@ a.show_more {
 }
 
 div.loading_div {
-	background-image: url('../img/loading.gif');
 	width: 32px;
 	height: 32px;
+	background-image: url('../img/loading.gif');
 	background-repeat: no-repeat;
+}
+
+.popularity {
+	background-image: url('../img/stars-rating-sprite.png');
+	background-repeat: no-repeat;
+	width: 120px;
+	height: 38px;
+}
+
+.popularity.score_0 {
+	background-position: 0px -190px;
+}
+
+.popularity.score_1 {
+	background-position: 0px -152px;
+}
+
+.popularity.score_2 {
+	background-position: 0px -114px;
+}
+
+.popularity.score_3 {
+	background-position: 0px -76px;
+}
+
+.popularity.score_4 {
+	background-position: 0px -38px;
+}
+
+.popularity.score_5 {
+	background-position: 0px 0px;
 }

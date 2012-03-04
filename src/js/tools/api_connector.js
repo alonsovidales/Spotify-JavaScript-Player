@@ -3,6 +3,15 @@ var apiConnectorObj_Tool = (function () {
 	// need process it again
 	var cachedQueries = {};
 
+	var pad = function(inNumber, inLen) {
+		var str = '' + inNumber;
+
+		while (str.length < inLen) {
+			str = '0' + str;
+		}
+		return str;
+	}
+
 	/**
 	  * The formaters will be used in order to keep the coherence between the 
 	  * information that we get from the API and the data structure that we use,
@@ -20,8 +29,7 @@ var apiConnectorObj_Tool = (function () {
 				results.push({
 					'type': 'album',
 					'href': inParams.albums[count].href,
-					'name': inParams.albums[count].name,
-					'popularity': inParams.albums[count].popularity,
+					'name': inParams.albums[count].name
 				});
 			}
 
@@ -35,8 +43,7 @@ var apiConnectorObj_Tool = (function () {
 				results.push({
 					'type': 'artist',
 					'href': inParams.artists[count].href,
-					'name': inParams.artists[count].name,
-					'popularity': inParams.artists[count].popularity,
+					'name': inParams.artists[count].name
 				});
 			}
 
@@ -50,8 +57,7 @@ var apiConnectorObj_Tool = (function () {
 				results.push({
 					'type': 'track',
 					'href': inParams.tracks[count].href,
-					'name': inParams.tracks[count].name,
-					'popularity': inParams.tracks[count].popularity,
+					'name': inParams.tracks[count].name
 				});
 			}
 
@@ -78,9 +84,12 @@ var apiConnectorObj_Tool = (function () {
 				result.albums.push({
 					'name': inParams.albums[album].name,
 					'popularity': inParams.albums[album].popularity,
+					'popularityUpToFive': Math.round(inParams.albums[album].popularity * 5),
 					'href': inParams.albums[album].href,
 					'artists': albumArtists
 				});
+
+				console.log(result);
 			}
 
 			return result;
@@ -97,7 +106,8 @@ var apiConnectorObj_Tool = (function () {
 				result.artists.push({
 					'href': inParams.artists[artist].href,
 					'name': inParams.artists[artist].name,
-					'popularity': inParams.artists[artist].popularity
+					'popularity': inParams.artists[artist].popularity,
+					'popularityUpToFive': Math.round(inParams.artists[artist].popularity * 5),
 				});
 			}
 
@@ -105,6 +115,7 @@ var apiConnectorObj_Tool = (function () {
 		},
 
 		'searchTrack': function(inParams) {
+			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
 				'tracks': []
@@ -119,14 +130,18 @@ var apiConnectorObj_Tool = (function () {
 					});
 				}
 
+				var minSec = Math.floor(inParams.tracks[track].length / 60) + ':' + pad(Math.round(inParams.tracks[track].length % 60), 2);
+
 				result.tracks.push({
 					'albumReleased': inParams.tracks[track].album.released,
 					'albumHref': inParams.tracks[track].album.href,
 					'albumName': inParams.tracks[track].album.name,
 					'name': inParams.tracks[track].name,
+					'href': inParams.tracks[track].href,
 					'popularity': inParams.tracks[track].popularity,
-					'length': inParams.tracks[track].popularity,
-					'trackNumber': inParams.tracks[track]['track-number'],
+					'popularityUpToFive': Math.round(inParams.tracks[track].popularity * 5),
+					'minSec': minSec,
+					'length': inParams.tracks[track].length,
 					'artists': artists
 				});
 			}
@@ -182,10 +197,14 @@ var apiConnectorObj_Tool = (function () {
 		},
 
 		'track': function(inParams) {
+			var minSec = Math.floor(inParams.track.length / 60) + ':' + pad(Math.round(inParams.track.length % 60), 2);
+
 			var result = {
 				'available': inParams.track.available,
 				'popularity': inParams.track.popularity,
+				'popularityUpToFive': Math.round(inParams.track.popularity * 5),
 				'length': inParams.track.length,
+				'minSec': minSec,
 				'name': inParams.track.name,
 				'artists': [],
 				'albumReleased': inParams.track.album.released,

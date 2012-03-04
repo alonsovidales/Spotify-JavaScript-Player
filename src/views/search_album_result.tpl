@@ -13,6 +13,9 @@ Total albums found #numResults#
 				Album: <a href="#album.href#" type="album" class="info_link">#album.name#</a>
 			</li>
 			<li>
+				Popularity: <div class="popularity score_#album.popularityUpToFive#"></div>
+			</li>
+			<li>
 				<ul>
 					{for artist in #album.artists#}
 					<li>

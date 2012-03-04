@@ -7,7 +7,14 @@ Total artists found #numResults#
 <ul>
 	{for artist in #artists#}
 	<li>
-		Artist: <a href="#artist.href#" type="artist" class="info_link">#artist.name#</a>
+		<ul>
+			<li>
+				Artist: <a href="#artist.href#" type="artist" class="info_link">#artist.name#</a>
+			</li>
+			<li>
+				Popularity: <div class="popularity score_#artist.popularityUpToFive#"></div>
+			</li>
+		</ul>
 	</li>
 	{/for #artists#}
 </ul>

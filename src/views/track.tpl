@@ -3,7 +3,7 @@
 </h1>
 <ul>
 	<li>
-		Popularity: <div class="popularity score_#popularityUpToFive#">#popularityUpToFive#</div>
+		Popularity: <div class="popularity score_#popularityUpToFive#"></div>
 	</li>
 	<li>
 		Duration (mm:ss): #minSec#

@@ -11,6 +11,7 @@
 </ul>
 
 <div id="album_tracks_list">
+	Tracks
 	<ul>
 		{for track in #tracks#}
 		<li class="{if #track.available#}aviable{/if #track.available#}">

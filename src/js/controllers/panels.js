@@ -8,6 +8,10 @@ var PanelsObj_Controller = (function () {
 
 			for (link in links) {
 				links[link].onclick = function() {
+					if (this.getAttribute('type') == 'track') {
+						this.setAttribute('draggable', 'true');
+					}
+
 					PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
 	
 					return false;
