@@ -20,18 +20,20 @@ var SearchBox_Controller = (function () {
 		valueFromAutocomplete = null;
 
 		currentAutocompleteReq = apiConnectorObj_Tool.autocompleteSearch(inType, inValue, function(inParams) {
-			var view = new TemplatesManager_Tool('autocomplete_list.tpl');
+			if (inParams.length > 0) {
+				var view = new TemplatesManager_Tool('autocomplete_list.tpl');
 
-			var htmlResult = view.process({
-				'results': inParams
-			});
+				var htmlResult = view.process({
+					'results': inParams
+				});
 
-			htmlResult = PanelsObj_Controller.createLinks(htmlResult);
+				htmlResult = PanelsObj_Controller.createLinks(htmlResult);
 
-			autocompleteDivElem.innerHTML = '';
-			autocompleteDivElem.appendChild(htmlResult);
-			// Set the display to none of the autocomplet list
-			autocompleteDivElem.classList.remove('hd');
+				autocompleteDivElem.innerHTML = '';
+				autocompleteDivElem.appendChild(htmlResult);
+				// Set the display to none of the autocomplet list
+				autocompleteDivElem.classList.remove('hd');
+			}
 		});
 	};
 
