@@ -1,5 +1,5 @@
 var config = {
 	apiBaseUrl: 'http://ws.spotify.com/',
-	templatesDir: 'js/views/',
+	templatesDir: 'views/',
 	autocompleteListLength: 15
 };
