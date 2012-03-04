@@ -1,8 +1,8 @@
 <div id="album_main_div">
+	<h1>
+		<a href="#href#" type="track" aviable="{if #available}aviable{/if}">#name#</a> {if #available}
+	</h1>
 	<ul>
-		<li>
-			<a href="#href#" type="track" aviable="{if #available}aviable{/if}">#name#</a> {if #available}(drag this link to an album to add it){/if}
-		</li>
 		<li>
 			Popularity: <div class="popularity score_#popularityUpToFive#">#popularityUpToFive#</div>
 		</li>

@@ -1,10 +1,7 @@
 <div id="album_main_div">
-	<ul>
-		<li>
-			Artist:
-			#name#
-		</li>
-	</ul>
+	<h1>
+		Artist: "#name#"
+	</h1>
 
 	<div id="albums_list">
 		<ul>

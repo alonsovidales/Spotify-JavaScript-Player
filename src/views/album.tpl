@@ -1,9 +1,8 @@
 <div id="album_main_div">
+	<h1>
+		Album: "#name#"
+	</h1>
 	<ul>
-		<li>
-			Album Name:
-			#name#
-		</li>
 		<li>
 			Artist:
 			<a href="#href#" type="artist" class="info_link">#artistName#</a>
