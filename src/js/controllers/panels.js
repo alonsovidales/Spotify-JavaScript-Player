@@ -8,27 +8,58 @@ var PanelsObj_Controller = (function () {
 
 			for (link in links) {
 				if (links[link].addEventListener !== undefined) {
-					if (links[link].getAttribute('type') == 'track') {
-						links[link].setAttribute('draggable', 'true');
+					switch (links[link].getAttribute('type')) {
+						case 'track':
+							links[link].setAttribute('draggable', 'true');
 
-						links[link].addEventListener('dragstart', function(inEvent) {
-							var dt = inEvent.dataTransfer;
-							var dragIcon = document.createElement('img');
+							links[link].addEventListener('dragstart', function(inEvent) {
+								var dt = inEvent.dataTransfer;
+								var dragIcon = document.createElement('img');
+	
+								dragIcon.src = '/img/add-track.jpg';
 
-							dragIcon.src = '/img/add-track.jpg';
+								dt.effectAllowed = 'copy';	
+								dt.setData('Text', JSON.stringify({
+									'type': 'track',
+									'href': this.getAttribute('href'),
+									'name': this.innerHTML}));
 	
-							dt.setData('application/json', {
-								'href': this.getAttribute('href'),
-								'name': this.innerHTML});
-	
-							dt.setDragImage(dragIcon, -10, -10);
-						}, false);
-					} else {
-						links[link].addEventListener('click', function() {
-							PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
+								dt.setDragImage(dragIcon, -10, -10);
+							}, false);
+							break;
+
+						case 'playlist':
+							links[link].addEventListener('dragover', function(inEvent) {
+								if (inEvent.preventDefault) {
+									inEvent.preventDefault();
+								}
+								this.classList.add('over');
+							});
+
+							links[link].addEventListener('dragleave', function(inEvent) {
+								this.classList.remove('over');
+							});
+
+							links[link].addEventListener('drop', function(inEvent) {
+								inEvent.preventDefault();
+
+								this.classList.remove('over');
+								var info = JSON.parse(inEvent.dataTransfer.getData('Text'));
+
+								PlaylistManager_Controller.addTrackToPlaylist(info.href, info.name, this.getAttribute('href'));
+
+								return false;
+							});
+							
+							break;
+
+						default:
+							links[link].addEventListener('click', function() {
+								PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
 			
-							return false;
-						}, false);
+								return false;
+							}, false);
+							break;
 					}
 				}
 			}
@@ -84,6 +115,10 @@ var PanelsObj_Controller = (function () {
 				case 'artist':
 					controller = new Artist_Controller(inId);
 					break;
+
+				case 'playlist':
+					controller = new Playlist_Controller(inId);
+					break;
 			}
 
 			view = this.createLinks(controller.getDetailView(inPage));
@@ -99,8 +134,6 @@ var PanelsObj_Controller = (function () {
 			SearchBox_Controller.bootstrap();
 
 			PlaylistManager_Controller.bootstrap();
-
-			console.log(PlaylistManager_Controller);
 		}
 	};
 })();

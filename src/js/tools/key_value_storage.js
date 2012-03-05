@@ -10,6 +10,7 @@ var KeyValueStorage_Abstract_Tool = (function() {
 		_saveObject: function() {
 			try {
 				if ((this._objType != '') && (this._objId != '')) {
+					this._removeObject();
 					localStorage.setItem(this._objType + '_' + this._objId, JSON.stringify(this._values));
 				}
 			} catch (error) {

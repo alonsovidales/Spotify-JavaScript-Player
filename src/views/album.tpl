@@ -15,7 +15,7 @@
 	<ul>
 		{for track in #tracks#}
 		<li class="{if #track.available#}aviable{/if #track.available#}">
-			{if #track.available#}<a href="#track.href#" type="track" class="info_link">{/if #track.available#}#track.name#{if #track.available#}</a>{/if #track.available#}
+			{if #track.available#}<a href="#track.href#" type="track" class="info_link track_link">{/if #track.available#}#track.name#{if #track.available#}</a>{/if #track.available#}
 			<div class="artists">
 				<ul>
 					{for artist in #track.artists#}

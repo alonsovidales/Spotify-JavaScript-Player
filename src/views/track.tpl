@@ -1,5 +1,5 @@
 <h1>
-	<a href="#href#" type="track" aviable="{if #available#}aviable{/if #available#}">#name#</a> {if #available}
+	{if #available#}<a href="#href#" type="track" class="info_link track_link">{/if #available}#name#{if #available#}</a>{/if #available}
 </h1>
 <ul>
 	<li>
