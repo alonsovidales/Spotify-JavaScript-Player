@@ -7,7 +7,7 @@ var Playlist_Controller = (function(inId) {
 		_values: null,
 
 		addTrackWithInfo: function(inInfo) {
-			this._values.tracks.push( inInfo);
+			this._values.tracks.push(inInfo);
 
 			this._saveObject();
 		},
@@ -34,6 +34,14 @@ var Playlist_Controller = (function(inId) {
 			});
 		},
 
+		removeTrack: function(inId) {
+			this._values.tracks.splice(inId, 1);
+
+			this._saveObject();
+
+			PlaylistManager_Controller.removedTrackFromList(this._objId);
+		},
+
 		getTracks: function() {
 			return this._values.tracks;
 		},
@@ -50,7 +58,17 @@ var Playlist_Controller = (function(inId) {
 		getDetailView: function() {
 			var view = new TemplatesManager_Tool('playlist.tpl');
 
-			console.log(this._values);
+			var params = this._values;
+			params.playlistId = this._objId;
+
+			// Add the ID to all the tracks, the id is the current possition
+			// in the tracks array
+			for (track in this._values.tracks) {
+				if (this._values.tracks[track] !== null) {
+					this._values.tracks[track].id = track;
+				}
+			}
+
 			var htmlResult = view.process(this._values);
 
 			return htmlResult;
@@ -67,6 +85,12 @@ var Playlist_Controller = (function(inId) {
 			}
 
 			return this;
+		},
+
+		del: function() {
+			PlaylistManager_Controller.removePlayListFromIndex(this._objId);
+
+			this._removeObject();
 		}
 	};
 

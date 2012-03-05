@@ -61,6 +61,32 @@ var PlaylistManager_Controller = (function() {
 			this._saveObject();
 		},
 
+		removePlayListFromIndex: function(inPlaylistId) {
+			var containerEl = document.getElementById(inPlaylistId + '_playlist_container_li');
+			var currentView = PanelsObj_Controller.getCurrentView();
+
+			if ((currentView !== null) && (currentView.type == 'playlist') && (currentView.id == inPlaylistId)) {
+				PanelsObj_Controller.cleanCurrentView();
+			}
+
+			document.getElementById('play_lists_ul').removeChild(containerEl);
+
+			delete this._values.playLists[inPlaylistId];
+
+			this._saveObject();
+		},
+
+		removedTrackFromList: function(inPlaylistId) {
+			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');
+			this._values.playLists[inPlaylistId].totalTracks--;
+			counter.innerHTML = this._values.playLists[inPlaylistId].totalTracks;
+
+			this._saveObject();
+
+			// Redraw the view with the track removed
+			PanelsObj_Controller.showDetails('playlist', inPlaylistId, false, 1);
+		},
+
 		bootstrap: function() {
 			var addPlaylistLink = document.getElementById('add_playlist_link');
 			play_lists_ul = document.getElementById('play_lists_ul');

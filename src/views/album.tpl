@@ -1,9 +1,9 @@
 <h1>
-	Album: "#name#"
+	Album: <a href="#href#" type="album" class="info_link">#name#</a>
 </h1>
 <ul>
 	<li>
-		Artist: <a href="#href#" type="artist" class="info_link">#artistName#</a>
+		Artist: <a href="#artistHref#" type="artist" class="info_link">#artistName#</a>
 	</li>
 	<li>
 		Released: #released#

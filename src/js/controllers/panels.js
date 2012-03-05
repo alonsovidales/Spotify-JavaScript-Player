@@ -1,4 +1,7 @@
 var PanelsObj_Controller = (function () {
+	var currentMainContentView = null;
+	var mainContentEl = null;
+
 	return {
 		createLinks: function(inHtml) {
 			var divContainer = document.createElement("div");
@@ -17,26 +20,35 @@ var PanelsObj_Controller = (function () {
 
 						links[link].addEventListener('dragstart', function(inEvent) {
 							var dt = inEvent.dataTransfer;
-							var dragIcon = document.createElement('img');
+							var dragIcon = null;
 
 							switch (this.getAttribute('type')) {
 								case 'track':
-									dragIcon.src = '/img/drag_track.png';
+									dragIcon = document.getElementById('drag_track_icon');
 									break;
 
 								case 'playlist':
-									dragIcon.src = '/img/drag_album.png';
+									dragIcon = document.getElementById('drag_playlist_icon');
 									break;
 
 								case 'album':
-									dragIcon.src = '/img/drag_album.png';
+									dragIcon = document.getElementById('drag_album_icon');
 									break;
 							}
+							dragIcon.classList.remove('hd');
 
-							dt.effectAllowed = 'copy';	
-							dt.setData('Text', JSON.stringify({
+							dt.effectAllowed = 'copy';
+
+							var infoToSend = {
 								'type': this.getAttribute('type'),
-								'href': this.getAttribute('href')}));
+								'href': this.getAttribute('href')};
+
+							if (this.getAttribute('playlist')) {
+								infoToSend.playlist = this.getAttribute('playlist');
+								infoToSend.trackId = this.getAttribute('trackid');
+							}
+
+							dt.setData('Text', JSON.stringify(infoToSend));
 
 							dt.setDragImage(dragIcon, 20, 20);
 						}, false);
@@ -120,8 +132,21 @@ var PanelsObj_Controller = (function () {
 			return divContainer;
 		},
 
+		getCurrentView: function() {
+			return currentMainContentView;
+		},
+
+		cleanCurrentView: function() {
+			mainContentEl.innerHTML = '';
+		},
+
 		showDetails: function(inType, inId, inAppend, inPage) {
-			console.log(inType, inId);
+			currentMainContentView = {
+				'type': inType,
+				'id': inId,
+				'append': inAppend,
+				'page': inPage};
+
 			var controller = null;
 
 			switch (inType) {
@@ -157,15 +182,17 @@ var PanelsObj_Controller = (function () {
 			view = this.createLinks(controller.getDetailView(inPage));
 
 			if (!inAppend) {
-				document.getElementById('details_div').innerHTML = '';
+				mainContentEl.innerHTML = '';
 			}
 
-			document.getElementById('details_div').appendChild(view);
+			mainContentEl.appendChild(view);
 		},
 
 		bootstrap: function() {
-			SearchBox_Controller.bootstrap();
+			mainContentEl = document.getElementById('details_div');
 
+			SearchBox_Controller.bootstrap();
+			Trash_Controller.bootstrap();
 			PlaylistManager_Controller.bootstrap();
 		}
 	};

@@ -153,7 +153,7 @@ var apiConnectorObj_Tool = (function () {
 			var result = {
 				'name': inParams.album.name,
 				'artistName': inParams.album.artist,
-				'href': inParams.album['artist-id'],
+				'artistHref': inParams.album['artist-id'],
 				'released': inParams.album.released,
 				'tracks': []
 			};

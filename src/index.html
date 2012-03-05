@@ -13,6 +13,7 @@
 		<script src="js/tools/alert.js"></script>
 		<script src="js/tools/templates_manager.js"></script>
 		<script src="js/controllers/playlist.js"></script>
+		<script src="js/controllers/trash.js"></script>
 		<script src="js/controllers/playlist_manager.js"></script>
 		<script src="js/controllers/search_box.js"></script>
 		<script src="js/controllers/search_track_result.js"></script>
@@ -51,6 +52,7 @@
 			<div id="body_div">
 				<div id="playlists_div">
 					<a href="javascript:void(0);" id="add_playlist_link"><img src="/img/add.png" /> New Play List</a>
+					<img src="/img/trash.png" id="trash_img" />
 					<ul id="play_lists_ul">
 					</ul>
 				</div>
@@ -61,5 +63,10 @@
 		<script>
 			window.onload = PanelsObj_Controller.bootstrap();
 		</script>
+
+		<!-- Icons for drag and drop events -->
+		<img src="/img/drag_track.png" id="drag_track_icon" class="hd" />
+		<img src="/img/drag_album.png" id="drag_album_icon" class="hd" />
+		<img src="/img/drag_playlist.png" id="drag_playlist_icon" class="hd" />
 	</body>
 </html>

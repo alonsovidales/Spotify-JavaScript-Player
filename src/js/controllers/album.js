@@ -1,10 +1,12 @@
 var Album_Controller = (function(inId) {
 	var albumInfo = null;
+	var id = null;
 
 	var my = {
 		getDetailView: function() {
 			var view = new TemplatesManager_Tool('album.tpl');
 
+			albumInfo.href = id;
 			var htmlResult = view.process(albumInfo);
 
 			return htmlResult;
@@ -15,6 +17,8 @@ var Album_Controller = (function(inId) {
 			apiConnectorObj_Tool.getAlbumInfo(inId, false, function (inValues) {
 				albumInfo = inValues;
 			});
+
+			id = inId;
 
 			return this;
 		}

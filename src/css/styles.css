@@ -177,3 +177,8 @@ div.alert_pop_up {
 .playlist_link.over {
 	color: #38700b;
 }
+
+img#trash_img {
+	float: right;
+	
+}
