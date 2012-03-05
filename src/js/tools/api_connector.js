@@ -168,11 +168,17 @@ var apiConnectorObj_Tool = (function () {
 					});
 				}
 
+				var minSec = Math.floor(inParams.album.tracks[track].length / 60) + ':' + pad(Math.round(inParams.album.tracks[track].length % 60), 2);
+
 				result.tracks.push({
 					'available': inParams.album.tracks[track].available,
 					'href': inParams.album.tracks[track].href,
 					'name': inParams.album.tracks[track].name,
-					'artists': artists
+					'artists': artists,
+					'minSec': minSec,
+					'length': inParams.album.tracks[track].length,
+					'popularity': inParams.album.tracks[track].popularity,
+					'popularityUpToFive': Math.round(inParams.album.tracks[track].popularity * 5)
 				});
 			}
 
@@ -243,15 +249,15 @@ var apiConnectorObj_Tool = (function () {
 					break;
 
 				case 503:
-					new Alert_Tool('Service Unavailable, sorry :(');
+					new Alert_Tool('Service Unavailable, sorry :(', '', 'Close');
 					break;
 
 				case 403:
-					new Alert_Tool('Sorry, you can\'t do more than 10 queries per second');
+					new Alert_Tool('Sorry, you can\'t do more than 10 queries per second', '', 'Close');
 					break;
 
 				default:
-					new Alert_Tool('Internal server error');
+					new Alert_Tool('Internal server error', '', 'Close');
 					break;
 			}
 		}, false);
@@ -270,7 +276,9 @@ var apiConnectorObj_Tool = (function () {
 		var extras = '';
 
 		if (inTypeAdapter == 'album') {
-			extras = '&extras=track';
+			// I'll need the detailed view, to be able to add albums to a playlist
+			// without do a call for each track
+			extras = '&extras=trackdetail';
 		}
 
 		if (inTypeAdapter == 'artist') {

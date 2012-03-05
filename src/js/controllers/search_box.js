@@ -167,10 +167,11 @@ var SearchBox_Controller = (function () {
 					currentAutocompleteReq.abort();
 				}
 
-				hideAutocomplete();
 				if (searchBox.value === '') {
 					searchBox.value = defaultValue;
 				}
+
+				setTimeout(hideAutocomplete, 100);
 			}, false);
 
 			searchIcon.addEventListener('click', function() {

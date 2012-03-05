@@ -5,6 +5,8 @@ var Track_Controller = (function(inId) {
 		getDetailView: function() {
 			var view = new TemplatesManager_Tool('track.tpl');
 
+
+			trackInfo.href = inId;
 			var htmlResult = view.process(trackInfo);
 
 			return htmlResult;

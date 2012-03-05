@@ -1,7 +1,7 @@
 <ul>
 	{for playList in #playLists#}
 	<li class="play_list_li">
-		<a href="#playList.id#" class="playlist_del_link"><img src="img/del.png" /></a> <a href="#playList.id#" type="playlist" class="info_link playlist_link">#playList.name# (<span id="playlist_total_tracks_#playList.id#_span">#playList.totalTracks#</span>)</a>
+		<a href="#playList.id#" type="playlist" class="info_link playlist_link">#playList.name# (<span id="playlist_total_tracks_#playList.id#_span">#playList.totalTracks#</span>)</a>
 	</li>
 	{/for #playLists#}
 </ul>

@@ -6,6 +6,16 @@ var Playlist_Controller = (function(inId) {
 		_objId: inId,
 		_values: null,
 
+		addTrackWithInfo: function(inInfo) {
+			this._values.tracks.push( inInfo);
+
+			this._saveObject();
+		},
+
+		getTracks: function() {
+			return this._values.tracks;
+		},
+
 		addTrack: function(inTrackHref) {
 			var playList = this;
 
@@ -22,6 +32,10 @@ var Playlist_Controller = (function(inId) {
 
 				playList._saveObject();
 			});
+		},
+
+		getTracks: function() {
+			return this._values.tracks;
 		},
 
 		getName: function() {

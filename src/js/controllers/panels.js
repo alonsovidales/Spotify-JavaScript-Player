@@ -8,49 +8,81 @@ var PanelsObj_Controller = (function () {
 
 			for (link in links) {
 				if (links[link].addEventListener !== undefined) {
-					switch (links[link].getAttribute('type')) {
-						case 'track':
-							links[link].setAttribute('draggable', 'true');
+					if (
+						(links[link].getAttribute('type') == 'track') ||
+						(links[link].getAttribute('type') == 'album') ||
+						(links[link].getAttribute('type') == 'playlist')) {
 
-							links[link].addEventListener('dragstart', function(inEvent) {
-								var dt = inEvent.dataTransfer;
-								var dragIcon = document.createElement('img');
-	
-								dragIcon.src = '/img/add-track.jpg';
+						links[link].setAttribute('draggable', 'true');
 
-								dt.effectAllowed = 'copy';	
-								dt.setData('Text', JSON.stringify({
-									'type': 'track',
-									'href': this.getAttribute('href')}));
-	
-								dt.setDragImage(dragIcon, -10, -10);
-							}, false);
-							break;
+						links[link].addEventListener('dragstart', function(inEvent) {
+							var dt = inEvent.dataTransfer;
+							var dragIcon = document.createElement('img');
 
-						case 'playlist':
-							links[link].addEventListener('dragover', function(inEvent) {
-								if (inEvent.preventDefault) {
-									inEvent.preventDefault();
-								}
-								this.classList.add('over');
-							});
+							switch (this.getAttribute('type')) {
+								case 'track':
+									dragIcon.src = '/img/drag_track.png';
+									break;
 
-							links[link].addEventListener('dragleave', function(inEvent) {
-								this.classList.remove('over');
-							});
+								case 'playlist':
+									dragIcon.src = '/img/drag_album.png';
+									break;
 
-							links[link].addEventListener('drop', function(inEvent) {
+								case 'album':
+									dragIcon.src = '/img/drag_album.png';
+									break;
+							}
+
+							dt.effectAllowed = 'copy';	
+							dt.setData('Text', JSON.stringify({
+								'type': this.getAttribute('type'),
+								'href': this.getAttribute('href')}));
+
+							dt.setDragImage(dragIcon, 20, 20);
+						}, false);
+					}
+
+					if (links[link].getAttribute('type') == 'playlist') {
+						links[link].addEventListener('dragover', function(inEvent) {
+							if (inEvent.preventDefault) {
 								inEvent.preventDefault();
+							}
+							this.classList.add('over');
+						});
 
-								this.classList.remove('over');
+						links[link].addEventListener('dragleave', function(inEvent) {
+							this.classList.remove('over');
+						});
+
+						links[link].addEventListener('drop', function(inEvent) {
+							inEvent.preventDefault();
+
+							this.classList.remove('over');
+
+							try {
 								var info = JSON.parse(inEvent.dataTransfer.getData('Text'));
 
-								PlaylistManager_Controller.addTrackToPlaylist(info.href, this.getAttribute('href'));
+								switch (info.type) {
+									case 'playlist':
+										PlaylistManager_Controller.addPlayListToPlayList(info.href, this.getAttribute('href'));
+										break;
 
-								return false;
-							});
-							
-							break;
+									case 'track':
+										PlaylistManager_Controller.addTrackToPlaylist(info.href, this.getAttribute('href'));
+										break;
+
+									case 'album':
+										PlaylistManager_Controller.addAlbumToPlaylist(info.href, this.getAttribute('href'));
+										break;
+								}
+							} catch(inError) {
+								if (config.debug) {
+									console.log('Element not allowed');
+								}
+							}
+
+							return false;
+						});
 					}
 
 					links[link].addEventListener('click', function(inEvent) {
@@ -67,7 +99,9 @@ var PanelsObj_Controller = (function () {
 
 			for (paginator in paginatorLinks) {
 				if (paginatorLinks[paginator].addEventListener !== undefined) {
-					paginatorLinks[paginator].addEventListener('click', function() {
+					paginatorLinks[paginator].addEventListener('click', function(inEvent) {
+						inEvent.preventDefault();
+
 						var linkElem = this;
 	
 						this.innerHTML = '<img src="img/loading.gif" />';

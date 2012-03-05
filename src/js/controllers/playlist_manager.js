@@ -8,6 +8,48 @@ var PlaylistManager_Controller = (function() {
 		_objId: 'main',
 		_values: null,
 
+		addPlayListToPlayList: function(inOriginId, inPlaylistId) {
+			var playListOrig = new Playlist_Controller(inOriginId);
+			var origTracks = playListOrig.getTracks();
+			var playListTarget = new Playlist_Controller(inPlaylistId);
+			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');
+
+			for (track in origTracks) {
+				if (origTracks.hasOwnProperty(track)) {
+					playListTarget.addTrackWithInfo(origTracks[track]);
+
+					this._values.playLists[inPlaylistId].totalTracks++;
+				}
+			}
+
+			counter.innerHTML = this._values.playLists[inPlaylistId].totalTracks;
+
+			this._saveObject();
+		},
+
+		addAlbumToPlaylist: function(inAlbumHref, inPlaylistId) {
+			var playList = new Playlist_Controller(inPlaylistId);
+			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');
+
+			apiConnectorObj_Tool.getAlbumInfo(inAlbumHref, true, function(inParams) {
+				for (track in inParams.tracks) {
+					if (inParams.tracks.hasOwnProperty(track)) {
+						playList.addTrackWithInfo({
+							'href': inParams.tracks[track].href,
+							'name': inParams.tracks[track].name,
+							'length': inParams.tracks[track].length, 
+							'minSec': inParams.tracks[track].minSec});
+	
+						my._values.playLists[inPlaylistId].totalTracks++;
+					}
+				}
+
+				counter.innerHTML = my._values.playLists[inPlaylistId].totalTracks;
+
+				my._saveObject();
+			});
+		},
+
 		addTrackToPlaylist: function(inTrackHref, inPlaylistId) {
 			var playList = new Playlist_Controller(inPlaylistId);
 			playList.addTrack(inTrackHref);
@@ -32,8 +74,6 @@ var PlaylistManager_Controller = (function() {
 					'lastId': 0,
 					'playLists': {}};
 			}
-
-			console.log(this._values);
 
 			renderList(this._values.playLists);
 
