@@ -8,16 +8,12 @@ var PlaylistManager_Controller = (function() {
 		_objId: 'main',
 		_values: null,
 
-		addTrackToPlaylist: function(inTrackHref, inTrackName, inPlaylistId) {
-			console.log(arguments);
-
-			this._values.playLists[inPlaylistId].totalTracks++;
-			this._values.playLists[inPlaylistId].tracks.push({
-				'href': inTrackHref,
-				'name': inTrackName
-			});
+		addTrackToPlaylist: function(inTrackHref, inPlaylistId) {
+			var playList = new Playlist_Controller(inPlaylistId);
+			playList.addTrack(inTrackHref);
 
 			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');
+			this._values.playLists[inPlaylistId].totalTracks++;
 			counter.innerHTML = this._values.playLists[inPlaylistId].totalTracks;
 
 			this._saveObject();
@@ -39,7 +35,7 @@ var PlaylistManager_Controller = (function() {
 
 			console.log(this._values);
 
-			loadLists(this._values);
+			renderList(this._values.playLists);
 
 			this._saveObject();
 			
@@ -50,21 +46,18 @@ var PlaylistManager_Controller = (function() {
 	// Extends the KeyValueStorage_Abstract_Tool abstract class
 	KeyValueStorage_Abstract_Tool.extend(my);
 
-	var loadLists = function(inLists) {
-		var view = new TemplatesManager_Tool('playlists_list.tpl');
-		var htmlResult = view.process(inLists);
+	var renderList = function(inPlayLists) {
+		for (playList in inPlayLists) {
+			var playListCont = new Playlist_Controller(inPlayLists[playList].id);
+			console.log(inPlayLists[playList].id);
+			inPlayLists[playList].name = playListCont.getName();
 
-		var newDiv = PanelsObj_Controller.createLinks(htmlResult);
-		var liElems = newDiv.getElementsByTagName('li');
-
-		console.log(liElems);
-
-		for (li in liElems) {
-			if (typeof liElems[li] == 'object') {
-				play_lists_ul.appendChild(liElems[li]);
-			}
+			var view = new TemplatesManager_Tool('playlists_list.tpl');
+			var htmlResult = view.process({playLists: [inPlayLists[playList]]});
+			var newDiv = PanelsObj_Controller.createLinks(htmlResult);
+			play_lists_ul.appendChild(newDiv.getElementsByTagName('li')[0]);
 		}
-	}
+	};
 
 	// Provate scope
 	var addNewList = function() {
@@ -76,23 +69,18 @@ var PlaylistManager_Controller = (function() {
 
 			var listId = ++my._values.lastId;
 
+			var playList = Playlist_Controller(listId);
+			playList.setName(document.getElementById('new_edit_list_name').value);
+
 			var newPlayList = {
 				'id': listId,
-				'totalTracks': 0,
-				'tracks': [],
-				'name': document.getElementById('new_edit_list_name').value
+				'totalTracks': 0
 			};
 
 			my._values.playLists[listId] = newPlayList;
 			my._saveObject();
 
-			view = new TemplatesManager_Tool('playlists_list.tpl');
-
-			var htmlResult = view.process({playLists: [newPlayList]});
-
-			var newDiv = PanelsObj_Controller.createLinks(htmlResult);
-
-			play_lists_ul.appendChild(newDiv.getElementsByTagName('li')[0]);
+			renderList([newPlayList]);
 
 			return true;
 		});

@@ -21,8 +21,7 @@ var PanelsObj_Controller = (function () {
 								dt.effectAllowed = 'copy';	
 								dt.setData('Text', JSON.stringify({
 									'type': 'track',
-									'href': this.getAttribute('href'),
-									'name': this.innerHTML}));
+									'href': this.getAttribute('href')}));
 	
 								dt.setDragImage(dragIcon, -10, -10);
 							}, false);
@@ -46,21 +45,21 @@ var PanelsObj_Controller = (function () {
 								this.classList.remove('over');
 								var info = JSON.parse(inEvent.dataTransfer.getData('Text'));
 
-								PlaylistManager_Controller.addTrackToPlaylist(info.href, info.name, this.getAttribute('href'));
+								PlaylistManager_Controller.addTrackToPlaylist(info.href, this.getAttribute('href'));
 
 								return false;
 							});
 							
 							break;
-
-						default:
-							links[link].addEventListener('click', function() {
-								PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
-			
-								return false;
-							}, false);
-							break;
 					}
+
+					links[link].addEventListener('click', function(inEvent) {
+						inEvent.preventDefault();
+
+						PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
+	
+						return false;
+					}, false);
 				}
 			}
 
