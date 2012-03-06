@@ -25,17 +25,7 @@ var Player_Controller = (function () {
 			my.playPrev();
 		}
 
-		var seconds = Math.floor(timeLeft % 60);
-		var mins = Math.floor(timeLeft / 60);
-
-		if (mins < 10) {
-			mins = '0' + mins;
-		}
-		if (seconds < 10) {
-			seconds = '0' + seconds;
-		}
-
-		timerEl.innerHTML = mins + ':' + seconds;
+		timerEl.innerHTML = timeManagerObj_Tool.getMinSec(timeLeft);
 
 		if (playFordware) {
 			timeLeft++;

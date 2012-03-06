@@ -1,20 +1,21 @@
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-03-03
+  *
+  * Global Api Connecctior object: This object will be
+  * used to do all the request to the API in order to keep
+  * all the different kind of request and reponses centralized,
+  * and in case of need a fast modification (due to a change on the
+  * API specification) be able to do it only working on this file.
+  * The parret used is a Adapter pattern, and a singleton to have only
+  * one instance of this object
+  *
+  */
+
 var apiConnectorObj_Tool = (function () {
 	// This var will be used to store the information processed in order to don't
 	// need process it again
 	var cachedQueries = {};
-
-	var pad = function(inNumber, inLen) {
-		var str = '' + inNumber;
-
-		while (str.length < inLen) {
-			str = '0' + str;
-		}
-		return str;
-	};
-
-	var getMinSec = function(inTime) {
-		return pad(Math.round(inTime / 60), 2) + ':' + pad(Math.floor(inTime % 60), 2);
-	};
 
 	/**
 	  * The formaters will be used in order to keep the coherence between the 
@@ -138,7 +139,7 @@ var apiConnectorObj_Tool = (function () {
 					'href': inParams.tracks[track].href,
 					'popularity': inParams.tracks[track].popularity,
 					'popularityUpToFive': Math.round(inParams.tracks[track].popularity * 5),
-					'minSec': getMinSec(inParams.tracks[track].length),
+					'minSec': timeManagerObj_Tool.getMinSec(inParams.tracks[track].length),
 					'length': inParams.tracks[track].length,
 					'artists': artists
 				});
@@ -171,7 +172,7 @@ var apiConnectorObj_Tool = (function () {
 					'href': inParams.album.tracks[track].href,
 					'name': inParams.album.tracks[track].name,
 					'artists': artists,
-					'minSec': getMinSec(inParams.album.tracks[track].length),
+					'minSec': timeManagerObj_Tool.getMinSec(inParams.album.tracks[track].length),
 					'length': inParams.album.tracks[track].length,
 					'popularity': inParams.album.tracks[track].popularity,
 					'popularityUpToFive': Math.round(inParams.album.tracks[track].popularity * 5)
@@ -204,7 +205,7 @@ var apiConnectorObj_Tool = (function () {
 				'popularity': inParams.track.popularity,
 				'popularityUpToFive': Math.round(inParams.track.popularity * 5),
 				'length': inParams.track.length,
-				'minSec': getMinSec(inParams.track.length),
+				'minSec': timeManagerObj_Tool.getMinSec(inParams.track.length),
 				'name': inParams.track.name,
 				'artists': [],
 				'albumReleased': inParams.track.album.released,

@@ -1,3 +1,13 @@
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-03-03
+  *
+  * Main Global Object, This object is used to:
+  *	- Control all the links to coordinate the relations between the
+  *	  different elements
+  *	- Control the central view
+  *	- Launch the rest of the components, is the bootstrap of the app
+  */
 var SpotifyPlayerObj_Controller = (function () {
 	var currentMainContentView = null;
 	var mainContentEl = null;
