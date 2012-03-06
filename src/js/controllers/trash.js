@@ -12,7 +12,6 @@ var Trash_Controller = (function () {
 
 			trashEl.addEventListener('drop', function(inEvent) {
 				var elemInfo = JSON.parse(inEvent.dataTransfer.getData('Text'));
-				console.log(elemInfo);
 
 				switch (elemInfo.type) {
 					case 'playlist':

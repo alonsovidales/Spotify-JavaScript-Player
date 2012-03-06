@@ -128,8 +128,8 @@ var Player_Controller = (function () {
 			playList.setTrackSpeackerIcon(inTrackId);
 
 			var name = currentTrackInfo.name;
-			if (name.length > 23) {
-				name = name.substr(0, 23) + '...';
+			if (name.length > config.maxSongTrackLengthForPlayer) {
+				name = name.substr(0, config.maxSongTrackLengthForPlayer) + '...';
 			}
 
 			trackNameEl.innerHTML = name;

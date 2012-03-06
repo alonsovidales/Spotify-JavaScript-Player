@@ -69,7 +69,6 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 	var my = {
 		constructor: function(inTemplateFile) {
 			var xhr = new XMLHttpRequest();
-			console.log(config.templatesDir + inTemplateFile);
 			xhr.open('GET', config.templatesDir + inTemplateFile, false);
 			xhr.addEventListener('load', function(e) {
 				if (this.status != 200) {

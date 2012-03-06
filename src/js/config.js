@@ -3,5 +3,6 @@ var config = {
 	templatesDir: 'views/',
 	resultsByPage: 100,
 	autocompleteListLength: 15,
-	debug: true
+	maxSongTrackLengthForPlayer: 18,
+	debug: false
 };

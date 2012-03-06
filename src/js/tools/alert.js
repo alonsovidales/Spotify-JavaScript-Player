@@ -27,7 +27,6 @@ var Alert_Tool = (function(inHtml, inSubmitButtonText, inCancelButtonText, inCal
 			divAlert.appendChild(cancelButton);
 
 			body.appendChild(divAlert);
-			console.log(divAlert);
 		}
 	};
 
