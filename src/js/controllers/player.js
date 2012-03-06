@@ -25,7 +25,7 @@ var Player_Controller = (function () {
 			my.playPrev();
 		}
 
-		var seconds = Math.round(timeLeft % 60);
+		var seconds = Math.floor(timeLeft % 60);
 		var mins = Math.floor(timeLeft / 60);
 
 		if (mins < 10) {
