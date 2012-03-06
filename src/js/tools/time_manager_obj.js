@@ -5,7 +5,7 @@
   * Global object used to keep the format coherence for
   * the time texts
   */
-var timeManagerObj_Tool = (fucntion() {
+var timeManagerObj_Tool = (function() {
 	/**
 	  * Adds a zero at the left if the number is lees than 10
 	  *
@@ -32,7 +32,7 @@ var timeManagerObj_Tool = (fucntion() {
 		  *
 		  * @return <str>: The string representation with mm:ss format
 		  */
-		getMinSec = function(inTime) {
+		getMinSec: function(inTime) {
 	                return padToTwo(Math.round(inTime / 60), 2) + ':' + padToTwo(Math.floor(inTime % 60), 2);
 	        }
 	};
