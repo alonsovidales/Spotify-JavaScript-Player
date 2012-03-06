@@ -61,8 +61,11 @@ var Playlist_Controller = (function(inId) {
 		},
 
 		unsetSpeackerIcon: function() {
-			document.getElementById(this._objId + '_play_list_speaker_icon').classList.add('hd');
-			document.getElementById(this._objId + '_play_list_play_icon').classList.remove('hd');
+			var oldSpeackerIcon = document.getElementById(this._objId + '_play_list_speaker_icon');
+			if (oldSpeackerIcon !== null) {
+				oldSpeackerIcon.classList.add('hd');
+				document.getElementById(this._objId + '_play_list_play_icon').classList.remove('hd');
+			}
 		},
 
 		removeTrack: function(inId) {
