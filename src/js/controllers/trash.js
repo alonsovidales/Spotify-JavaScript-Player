@@ -27,24 +27,26 @@ var Trash_Controller = (function () {
 			// of the element that the user want to delete
 			trashEl.addEventListener('drop', function(inEvent) {
 				var elemInfo = JSON.parse(inEvent.dataTransfer.getData('Text'));
+				var controller = null;
+				var current = null;
 
 				// Check if this element can be removed
 				switch (elemInfo.type) {
 					case 'playlist':
-						var current = Player_Controller.getCurrentTrackList();
+						current = Player_Controller.getCurrentTrackList();
 						if (current.playlist == elemInfo.href) {
 							Player_Controller.resetPlayer();
 						}
 
-						var controller = new Playlist_Controller(elemInfo.href);
+						controller = new Playlist_Controller(elemInfo.href);
 						controller.del();
 						break;
 
 					case 'track':
 						if (elemInfo.playlist !== undefined) {
-							var controller = new Playlist_Controller(elemInfo.playlist);
+							controller = new Playlist_Controller(elemInfo.playlist);
 
-							var current = Player_Controller.getCurrentTrackList();
+							current = Player_Controller.getCurrentTrackList();
 
 							// If it is showing the playlist, update it
 							if (current.playlist == elemInfo.playlist) {

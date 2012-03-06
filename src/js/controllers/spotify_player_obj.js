@@ -72,13 +72,13 @@ var SpotifyPlayerObj_Controller = (function () {
 			var directPlaylistLinks = divContainer.getElementsByClassName('direct_play_list_button');
 			for (link in directPlaylistLinks) {
 				if (directPlaylistLinks[link].addEventListener !== undefined) {
-					directPlaylistLinks[link].addEventListener('click', function(inEvent) {
+					directPlaylistLinks[link].addEventListener('click', (function(inEvent) {
 						inEvent.preventDefault();
 
 						Player_Controller.playTrack(this.getAttribute('href'), 0);
 	
 						return false;
-					}, false);
+					}), false);
 				}
 			}
 
@@ -86,13 +86,13 @@ var SpotifyPlayerObj_Controller = (function () {
 			var editPlaylistLinks = divContainer.getElementsByClassName('edit_playlist_link');
 			for (link in editPlaylistLinks) {
 				if (editPlaylistLinks[link].addEventListener !== undefined) {
-					editPlaylistLinks[link].addEventListener('click', function(inEvent) {
+					editPlaylistLinks[link].addEventListener('click', (function(inEvent) {
 						inEvent.preventDefault();
 
 						PlaylistManager_Controller.editPlayList(this.getAttribute('href'));
 	
 						return false;
-					}, false);
+					}), false);
 				}
 			}
 
@@ -100,13 +100,13 @@ var SpotifyPlayerObj_Controller = (function () {
 			var playTrackLinks = divContainer.getElementsByClassName('play_track');
 			for (link in playTrackLinks) {
 				if (playTrackLinks[link].addEventListener !== undefined) {
-					playTrackLinks[link].addEventListener('click', function(inEvent) {
+					playTrackLinks[link].addEventListener('click', (function(inEvent) {
 						inEvent.preventDefault();
 
 						Player_Controller.playTrack(this.getAttribute('playlist'), this.getAttribute('trackid'));
 	
 						return false;
-					}, false);
+					}), false);
 				}
 			}
 
@@ -122,7 +122,7 @@ var SpotifyPlayerObj_Controller = (function () {
 
 						links[link].setAttribute('draggable', 'true');
 
-						links[link].addEventListener('dragstart', function(inEvent) {
+						links[link].addEventListener('dragstart', (function(inEvent) {
 							var dt = inEvent.dataTransfer;
 							var dragIcon = null;
 
@@ -157,23 +157,23 @@ var SpotifyPlayerObj_Controller = (function () {
 							}
 
 							dt.setData('Text', JSON.stringify(infoToSend));
-						}, false);
+						}), false);
 					}
 
 					// Add the drop events for the playlists
 					if (links[link].getAttribute('type') == 'playlist') {
-						links[link].addEventListener('dragover', function(inEvent) {
+						links[link].addEventListener('dragover', (function(inEvent) {
 							if (inEvent.preventDefault) {
 								inEvent.preventDefault();
 							}
 							this.classList.add('over');
-						});
+						}), false);
 
-						links[link].addEventListener('dragleave', function(inEvent) {
+						links[link].addEventListener('dragleave', (function(inEvent) {
 							this.classList.remove('over');
-						});
+						}), false);
 
-						links[link].addEventListener('drop', function(inEvent) {
+						links[link].addEventListener('drop', (function(inEvent) {
 							inEvent.preventDefault();
 
 							this.classList.remove('over');
@@ -208,17 +208,17 @@ var SpotifyPlayerObj_Controller = (function () {
 							}
 
 							return false;
-						});
+						}), false);
 					}
 
 					// Add the click event to the information links
-					links[link].addEventListener('click', function(inEvent) {
+					links[link].addEventListener('click', (function(inEvent) {
 						inEvent.preventDefault();
 
 						SpotifyPlayerObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
 	
 						return false;
-					}, false);
+					}), false);
 				}
 			}
 
@@ -227,7 +227,7 @@ var SpotifyPlayerObj_Controller = (function () {
 
 			for (paginator in paginatorLinks) {
 				if (paginatorLinks[paginator].addEventListener !== undefined) {
-					paginatorLinks[paginator].addEventListener('click', function(inEvent) {
+					paginatorLinks[paginator].addEventListener('click', (function(inEvent) {
 						inEvent.preventDefault();
 
 						var linkElem = this;
@@ -241,10 +241,10 @@ var SpotifyPlayerObj_Controller = (function () {
 						}, 1);
 	
 						return false;
-					}, false);
+					}), false);
 				}
 			}
-	
+
 			return divContainer;
 		},
 

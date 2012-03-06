@@ -24,7 +24,7 @@ var SearchAlbumResult_Controller = (function(inSearchStr) {
 			var currentPage = 1;
 
 			if (currentPage !== undefined) {
-				currentPage = parseInt(inPage, 10);;
+				currentPage = parseInt(inPage, 10);
 			}
 
 			// Load the information from the API

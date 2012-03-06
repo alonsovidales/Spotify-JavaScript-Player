@@ -27,16 +27,18 @@ var PlaylistManager_Controller = (function() {
 	  */
 	var renderList = function(inPlayLists) {
 		for (playList in inPlayLists) {
-			var playListCont = new Playlist_Controller(inPlayLists[playList].id);
-			inPlayLists[playList].name = playListCont.getName();
+			if (inPlayLists.hasOwnProperty(playList)) {
+				var playListCont = new Playlist_Controller(inPlayLists[playList].id);
+				inPlayLists[playList].name = playListCont.getName();
 
-			// Create the view
-			var view = new TemplatesManager_Tool('playlists_list.tpl');
-			var htmlResult = view.process({playLists: [inPlayLists[playList]]});
+				// Create the view
+				var view = new TemplatesManager_Tool('playlists_list.tpl');
+				var htmlResult = view.process({playLists: [inPlayLists[playList]]});
 
-			// Create all the necessary links and events for interaction
-			var newDiv = SpotifyPlayerObj_Controller.createLinks(htmlResult);
-			play_lists_ul.appendChild(newDiv.getElementsByTagName('li')[0]);
+				// Create all the necessary links and events for interaction
+				var newDiv = SpotifyPlayerObj_Controller.createLinks(htmlResult);
+				play_lists_ul.appendChild(newDiv.getElementsByTagName('li')[0]);
+			}
 		}
 	};
 
@@ -47,7 +49,7 @@ var PlaylistManager_Controller = (function() {
 	  */
 	var addNewList = function() {
 		// Show the alert
-		new Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
+		Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
 			var name = document.getElementById('new_edit_list_name').value;
 			if (name === '') {
 				return false;
@@ -213,7 +215,7 @@ var PlaylistManager_Controller = (function() {
 			var playList = Playlist_Controller(inPlayListId);
 
 			// Show the alert using Alert_Tool
-			new Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
+			Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
 				var newName = document.getElementById('new_edit_list_name').value;
 				if (newName !== '') {
 					playList.setName(newName);

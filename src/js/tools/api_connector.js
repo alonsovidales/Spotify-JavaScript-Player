@@ -164,7 +164,7 @@ var apiConnectorObj_Tool = (function () {
 					'href': inParams.artists[artist].href,
 					'name': inParams.artists[artist].name,
 					'popularity': inParams.artists[artist].popularity,
-					'popularityUpToFive': Math.round(inParams.artists[artist].popularity * 5),
+					'popularityUpToFive': Math.round(inParams.artists[artist].popularity * 5)
 				});
 			}
 
@@ -410,15 +410,15 @@ var apiConnectorObj_Tool = (function () {
 					break;
 
 				case 503:
-					new Alert_Tool('Service Unavailable, sorry :(', '', 'Close');
+					Alert_Tool('Service Unavailable, sorry :(', '', 'Close');
 					break;
 
 				case 403:
-					new Alert_Tool('Sorry, you can\'t do more than 10 queries per second', '', 'Close');
+					Alert_Tool('Sorry, you can\'t do more than 10 queries per second', '', 'Close');
 					break;
 
 				default:
-					new Alert_Tool('Internal server error', '', 'Close');
+					Alert_Tool('Internal server error', '', 'Close');
 					break;
 			}
 

@@ -134,16 +134,18 @@ var SearchBox_Controller = (function () {
 				elements[0] = autocompleteSelectElement(elements[0]);
 			} else {
 				for (element in elements) {
-					if (selectedElem == elements[element]) {
-						if (elements[parseInt(element, 10) + 1] !== undefined) {
-							elements[parseInt(element, 10) + 1] = autocompleteSelectElement(elements[parseInt(element, 10) + 1]);
-						} else {
-							elements[0] = autocompleteSelectElement(elements[0]);
+					if (elements.hasOwnProperty(element)) {
+						if (selectedElem == elements[element]) {
+							if (elements[parseInt(element, 10) + 1] !== undefined) {
+								elements[parseInt(element, 10) + 1] = autocompleteSelectElement(elements[parseInt(element, 10) + 1]);
+							} else {
+								elements[0] = autocompleteSelectElement(elements[0]);
+							}
+							break;
 						}
-						break;
-					}
 	
-					prev = elements[element];
+						prev = elements[element];
+					}
 				}
 			}
 		}

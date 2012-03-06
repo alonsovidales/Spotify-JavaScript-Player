@@ -70,10 +70,12 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 					for (var count = 0; count < loops.length; count += 2) {
 						var loopContent = '';
 						for (loopParam in inParams[param]) {
-							loopContent += processTemplate(
-								loops[count],
-								inParams[param][loopParam],
-								inPrefix + loops[count + 1] + '.');
+							if (inParams[param].hasOwnProperty(loopParam)) {
+								loopContent += processTemplate(
+									loops[count],
+									inParams[param][loopParam],
+									inPrefix + loops[count + 1] + '.');
+							}
 						}
 	
 						result = result.replace(loops[count], loopContent);
@@ -83,7 +85,7 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		}
 
 		// Process the simple vars using direct replacement
-		for (var param in inParams) {
+		for (param in inParams) {
 			if (typeof(inParams[param]) != 'object') {
 				// If the var is a boolean var, look for the {if #xx#} clausules,
 				// and if the val is false, remove the content
@@ -151,7 +153,7 @@ var TemplatesManager_Tool = (function (inTemplateFile) {
 		process: function(inParams) {
 			return processTemplate(templateContent, inParams, '');
 		}
-	}
+	};
 
 	return my.constructor(inTemplateFile);
 });

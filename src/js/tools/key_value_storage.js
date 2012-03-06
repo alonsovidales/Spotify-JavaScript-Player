@@ -24,13 +24,13 @@ var KeyValueStorage_Abstract_Tool = (function() {
 		_saveObject: function() {
 			try {
 				// We will need the both vars in order to create the key
-				if ((this._objType != '') && (this._objId != '')) {
+				if ((this._objType !== '') && (this._objId !== '')) {
 					this._removeObject();
 					localStorage.setItem(this._objType + '_' + this._objId, JSON.stringify(this._values));
 				}
 			} catch (error) {
 				if (error == QUOTA_EXCEEDED_ERR) {
-					new Alert_Tool('Quota exceeded, remove some elements');
+					Alert_Tool('Quota exceeded, remove some elements');
 				}
 			}
 		},
@@ -39,7 +39,7 @@ var KeyValueStorage_Abstract_Tool = (function() {
 		  * Load all the information from localStorage into this._values
 		  */
 		_loadObject: function() {
-			if ((this._objType != '') && (this._objId != '')) {
+			if ((this._objType !== '') && (this._objId !== '')) {
 				this._values = JSON.parse(localStorage.getItem(this._objType + '_' + this._objId));
 			} else {
 				console.error('Key error: Trying to load a object without _objType or _objId');
