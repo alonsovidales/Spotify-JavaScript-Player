@@ -10,7 +10,11 @@ var apiConnectorObj_Tool = (function () {
 			str = '0' + str;
 		}
 		return str;
-	}
+	};
+
+	var getMinSec = function(inTime) {
+		return pad(Math.floor(inTime / 60), 2) + ':' + pad(Math.floor(inTime % 60), 2);
+	};
 
 	/**
 	  * The formaters will be used in order to keep the coherence between the 
@@ -130,8 +134,6 @@ var apiConnectorObj_Tool = (function () {
 					});
 				}
 
-				var minSec = Math.floor(inParams.tracks[track].length / 60) + ':' + pad(Math.round(inParams.tracks[track].length % 60), 2);
-
 				result.tracks.push({
 					'albumReleased': inParams.tracks[track].album.released,
 					'albumHref': inParams.tracks[track].album.href,
@@ -140,7 +142,7 @@ var apiConnectorObj_Tool = (function () {
 					'href': inParams.tracks[track].href,
 					'popularity': inParams.tracks[track].popularity,
 					'popularityUpToFive': Math.round(inParams.tracks[track].popularity * 5),
-					'minSec': minSec,
+					'minSec': getMinSec(inParams.tracks[track].length),
 					'length': inParams.tracks[track].length,
 					'artists': artists
 				});
@@ -168,14 +170,12 @@ var apiConnectorObj_Tool = (function () {
 					});
 				}
 
-				var minSec = Math.floor(inParams.album.tracks[track].length / 60) + ':' + pad(Math.round(inParams.album.tracks[track].length % 60), 2);
-
 				result.tracks.push({
 					'available': inParams.album.tracks[track].available,
 					'href': inParams.album.tracks[track].href,
 					'name': inParams.album.tracks[track].name,
 					'artists': artists,
-					'minSec': minSec,
+					'minSec': getMinSec(inParams.album.tracks[track].length),
 					'length': inParams.album.tracks[track].length,
 					'popularity': inParams.album.tracks[track].popularity,
 					'popularityUpToFive': Math.round(inParams.album.tracks[track].popularity * 5)
@@ -203,14 +203,12 @@ var apiConnectorObj_Tool = (function () {
 		},
 
 		'track': function(inParams) {
-			var minSec = Math.floor(inParams.track.length / 60) + ':' + pad(Math.round(inParams.track.length % 60), 2);
-
 			var result = {
 				'available': inParams.track.available,
 				'popularity': inParams.track.popularity,
 				'popularityUpToFive': Math.round(inParams.track.popularity * 5),
 				'length': inParams.track.length,
-				'minSec': minSec,
+				'minSec': getMinSec(inParams.track.length),
 				'name': inParams.track.name,
 				'artists': [],
 				'albumReleased': inParams.track.album.released,

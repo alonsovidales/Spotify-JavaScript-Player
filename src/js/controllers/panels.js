@@ -7,6 +7,20 @@ var PanelsObj_Controller = (function () {
 			var divContainer = document.createElement("div");
 			divContainer.innerHTML = inHtml;
 
+			var playTrackLinks = divContainer.getElementsByClassName('play_track');
+
+			for (link in playTrackLinks) {
+				if (playTrackLinks[link].addEventListener !== undefined) {
+					playTrackLinks[link].addEventListener('click', function(inEvent) {
+						inEvent.preventDefault();
+
+						Player_Controller.playTrack(this.getAttribute('playlist'), this.getAttribute('trackid'));
+	
+						return false;
+					}, false);
+				}
+			}
+
 			var links = divContainer.getElementsByClassName('info_link');
 
 			for (link in links) {
@@ -194,6 +208,7 @@ var PanelsObj_Controller = (function () {
 			SearchBox_Controller.bootstrap();
 			Trash_Controller.bootstrap();
 			PlaylistManager_Controller.bootstrap();
+			Player_Controller.bootstrap();
 		}
 	};
 })();

@@ -34,12 +34,24 @@ var Playlist_Controller = (function(inId) {
 			});
 		},
 
+		getNumTracks: function() {
+			return this._values.tracks.length;
+		},
+
 		removeTrack: function(inId) {
 			this._values.tracks.splice(inId, 1);
 
 			this._saveObject();
 
 			PlaylistManager_Controller.removedTrackFromList(this._objId);
+		},
+
+		getTracksInfo: function(inId) {
+			if (this._values.tracks[inId] !== undefined) {
+				return this._values.tracks[inId];
+			}
+
+			return null;
 		},
 
 		getTracks: function() {

@@ -13,6 +13,7 @@
 		<script src="js/tools/alert.js"></script>
 		<script src="js/tools/templates_manager.js"></script>
 		<script src="js/controllers/playlist.js"></script>
+		<script src="js/controllers/player.js"></script>
 		<script src="js/controllers/trash.js"></script>
 		<script src="js/controllers/playlist_manager.js"></script>
 		<script src="js/controllers/search_box.js"></script>
@@ -28,7 +29,23 @@
 		<div id="main_canvas">
 			<div id="header_div">
 				<div id="player_div">
-					player
+					<ul id="player_buttons">
+						<li>
+							<div class="player_button rewind disabled" id="player_rewind_div"></div>
+						</li>
+						<li>
+							<div class="player_button play" id="player_play_pause_stop_div"></div>
+						</li>
+						<li>
+							<div class="player_button fordware disabled" id="player_fordware_div"></div>
+						</li>
+						<li>
+							<div id="player_timmer_div">33:21</div>
+						</li>
+						<li>
+							<div id="player_title_div">Title</div>
+						</li>
+					</ul>
 				</div>
 				<div id="searchbox_div">
 					<ul id="searchbox_elements">
