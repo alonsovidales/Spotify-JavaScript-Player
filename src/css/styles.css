@@ -15,9 +15,15 @@ html, body {
 	height: 950px;
 }
 
+#background_loading_api {
+	float: left;
+	width: 50px;
+	height: 50px;
+}
+
 #player_div {
 	float: left;
-	width: 400px;
+	width: 370px;
 	height: 50px;
 }
 

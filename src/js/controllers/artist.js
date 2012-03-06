@@ -5,8 +5,6 @@ var Artist_Controller = (function(inId) {
 		getDetailView: function() {
 			var view = new TemplatesManager_Tool('artist.tpl');
 
-			console.log(artistInfo);
-
 			var htmlResult = view.process(artistInfo);
 
 			return htmlResult;

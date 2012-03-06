@@ -92,15 +92,12 @@ var apiConnectorObj_Tool = (function () {
 					'href': inParams.albums[album].href,
 					'artists': albumArtists
 				});
-
-				console.log(result);
 			}
 
 			return result;
 		},
 
 		'searchArtist': function(inParams) {
-			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
 				'artists': []
@@ -119,7 +116,6 @@ var apiConnectorObj_Tool = (function () {
 		},
 
 		'searchTrack': function(inParams) {
-			console.log(inParams);
 			var result = {
 				'numResults': inParams.info.num_results,
 				'tracks': []
@@ -234,8 +230,14 @@ var apiConnectorObj_Tool = (function () {
 			return null;
 		}
 
+		document.getElementById('api_loading_img').classList.remove('hd');
+
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', inUrl, inAsync);
+		xhr.addEventListener('abort', function(e) {
+			document.getElementById('api_loading_img').classList.add('hd');
+		});
+
 		xhr.addEventListener('load', function(e) {
 			switch (this.status) {
 				case 200:
@@ -258,6 +260,8 @@ var apiConnectorObj_Tool = (function () {
 					new Alert_Tool('Internal server error', '', 'Close');
 					break;
 			}
+
+			document.getElementById('api_loading_img').classList.add('hd');
 		}, false);
 
 		xhr.send();

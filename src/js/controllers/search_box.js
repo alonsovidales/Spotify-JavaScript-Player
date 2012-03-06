@@ -30,6 +30,7 @@ var SearchBox_Controller = (function () {
 
 				htmlResult = PanelsObj_Controller.createLinks(htmlResult);
 
+				selectedElem = null;
 				autocompleteDivElem.innerHTML = '';
 				autocompleteDivElem.appendChild(htmlResult);
 				// Set the display to none of the autocomplet list
