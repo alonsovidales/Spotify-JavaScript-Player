@@ -25,6 +25,12 @@ var PlaylistManager_Controller = (function() {
 			counter.innerHTML = this._values.playLists[inPlaylistId].totalTracks;
 
 			this._saveObject();
+
+			// If the user have this list opened, refresh the view to include the new tracks
+			var currentMainContentView = SpotifyPlayerObj_Controller.getCurrentView();
+			if ((currentMainContentView.type == 'playlist') && (currentMainContentView.id == inPlaylistId)) {
+				SpotifyPlayerObj_Controller.showDetails('playlist', inPlaylistId);
+			}
 		},
 
 		addAlbumToPlaylist: function(inAlbumHref, inPlaylistId) {
