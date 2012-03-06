@@ -1,4 +1,4 @@
-var PanelsObj_Controller = (function () {
+var SpotifyPlayerObj_Controller = (function () {
 	var currentMainContentView = null;
 	var mainContentEl = null;
 
@@ -142,7 +142,7 @@ var PanelsObj_Controller = (function () {
 					links[link].addEventListener('click', function(inEvent) {
 						inEvent.preventDefault();
 
-						PanelsObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
+						SpotifyPlayerObj_Controller.showDetails(this.getAttribute('type'), this.getAttribute('href'), false, 1);
 	
 						return false;
 					}, false);
@@ -161,7 +161,7 @@ var PanelsObj_Controller = (function () {
 						this.innerHTML = '<img src="img/loading.gif" />';
 	
 						setTimeout(function() {
-							PanelsObj_Controller.showDetails(linkElem.getAttribute('type'), linkElem.getAttribute('href'), true, linkElem.getAttribute('nextpage'));
+							SpotifyPlayerObj_Controller.showDetails(linkElem.getAttribute('type'), linkElem.getAttribute('href'), true, linkElem.getAttribute('nextpage'));
 	
 							linkElem.classList.add('hd');
 						}, 1);

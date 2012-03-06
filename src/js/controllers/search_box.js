@@ -28,7 +28,7 @@ var SearchBox_Controller = (function () {
 					'results': inParams
 				});
 
-				htmlResult = PanelsObj_Controller.createLinks(htmlResult);
+				htmlResult = SpotifyPlayerObj_Controller.createLinks(htmlResult);
 
 				selectedElem = null;
 				autocompleteDivElem.innerHTML = '';
@@ -55,7 +55,7 @@ var SearchBox_Controller = (function () {
 
 		// Create a new threat to don't damage the user experience
 		setTimeout(function() {
-			PanelsObj_Controller.showDetails(
+			SpotifyPlayerObj_Controller.showDetails(
 				link.getAttribute('type'),
 				link.getAttribute('href'));
 		}, false, 1);
@@ -109,7 +109,7 @@ var SearchBox_Controller = (function () {
 		// If the value cames from the autocomplete (the info is yet loaded),
 		// or is an empy string, don't do anyting...
 		if ((inValue !== '') && (!valueFromAutocomplete) && (inValue !== defaultValue)) {
-			PanelsObj_Controller.showDetails(
+			SpotifyPlayerObj_Controller.showDetails(
 				'searchResult_' + inType,
 				inValue, false, 1);
 		}

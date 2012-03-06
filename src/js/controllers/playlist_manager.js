@@ -63,10 +63,10 @@ var PlaylistManager_Controller = (function() {
 
 		removePlayListFromIndex: function(inPlaylistId) {
 			var containerEl = document.getElementById(inPlaylistId + '_playlist_container_li');
-			var currentView = PanelsObj_Controller.getCurrentView();
+			var currentView = SpotifyPlayerObj_Controller.getCurrentView();
 
 			if ((currentView !== null) && (currentView.type == 'playlist') && (currentView.id == inPlaylistId)) {
-				PanelsObj_Controller.cleanCurrentView();
+				SpotifyPlayerObj_Controller.cleanCurrentView();
 			}
 
 			document.getElementById('play_lists_ul').removeChild(containerEl);
@@ -84,7 +84,7 @@ var PlaylistManager_Controller = (function() {
 			this._saveObject();
 
 			// Redraw the view with the track removed
-			PanelsObj_Controller.showDetails('playlist', inPlaylistId, false, 1);
+			SpotifyPlayerObj_Controller.showDetails('playlist', inPlaylistId, false, 1);
 		},
 
 		bootstrap: function() {
@@ -139,7 +139,7 @@ var PlaylistManager_Controller = (function() {
 
 			var view = new TemplatesManager_Tool('playlists_list.tpl');
 			var htmlResult = view.process({playLists: [inPlayLists[playList]]});
-			var newDiv = PanelsObj_Controller.createLinks(htmlResult);
+			var newDiv = SpotifyPlayerObj_Controller.createLinks(htmlResult);
 			play_lists_ul.appendChild(newDiv.getElementsByTagName('li')[0]);
 		}
 	};
