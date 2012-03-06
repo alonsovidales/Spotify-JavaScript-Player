@@ -1,3 +1,18 @@
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-03-05
+  *
+  * Creates a pop-up with the inHtml rendered as content,
+  * and a pair of optional buttons
+  *
+  * @param inHtml <string>: The html content to render inside the window
+  * @param inSubmitButtonText Optional <string>: The text for the submit button,
+  *	if is omited, don't render the button
+  * @param inCancelButtonText <string>: The text for the cancel button
+  * @param inCallBack <function>: The funciton to be called when the user do click
+  *	on the submit button
+  */
+
 var Alert_Tool = (function(inHtml, inSubmitButtonText, inCancelButtonText, inCallBack) {
 	var my = {
 		constructor: function(inHtml, inSubmitButtonText, inCallBack) {
@@ -10,6 +25,7 @@ var Alert_Tool = (function(inHtml, inSubmitButtonText, inCancelButtonText, inCal
 
 			divAlert.innerHTML = inHtml;
 
+			// Check if the submit text is defined, and if it is, create the button
 			if ((inSubmitButtonText !== undefined) && (inSubmitButtonText !== '')) {
 				submitButton.addEventListener('click', function() {
 					if (inCallBack()) {

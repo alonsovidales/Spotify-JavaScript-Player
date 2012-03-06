@@ -187,7 +187,7 @@ div.alert_pop_up {
 
 img#trash_img {
 	float: right;
-	
+	margin-right: 10px;
 }
 
 .player_button {

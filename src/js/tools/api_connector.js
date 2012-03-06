@@ -10,6 +10,7 @@
   * The parret used is a Adapter pattern, and a singleton to have only
   * one instance of this object
   *
+  * @see config.apiBaseUrl
   */
 
 var apiConnectorObj_Tool = (function () {
@@ -34,6 +35,7 @@ var apiConnectorObj_Tool = (function () {
 		  *		'href': <str>, // The unique id of the album
 		  *		'name': <str> // The title of the album
 		  *	}
+		  * @see config.autocompleteListLength
 		  */
 		autocompleteAlbumSearch: function(inParams) {
 			var results = [];
