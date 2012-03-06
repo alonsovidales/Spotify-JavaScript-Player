@@ -1,18 +1,42 @@
-var SearchBox_Controller = (function () {
-	var defaultValue = '';
-	var currentAutocompleteReq = null;
-	var selectedElem = null;
-	var autocompleteDivElem = null;
-	var searchBox = null;
-	var lastSearchBoxValue = '';
-	var valueFromAutocomplete = false;
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-03-04
+  *
+  * Global singleton object used to controll the features of the searchbox
+  *
+  */
 
+var SearchBox_Controller = (function () {
+	var defaultValue = ''; // The initial value of the searchbox
+	var currentAutocompleteReq = null; // The XMLHttpRequest request  object for the autocomplete list
+	var selectedElem = null; // the current autocomplete selected item
+	var autocompleteDivElem = null; // The div DOM element to render the autoloader results
+	var searchBox = null; // The search box DOM element
+	var lastSearchBoxValue = ''; // The last value that the search box had after the last modification
+	var valueFromAutocomplete = false; // If is true, te current value cames from the autocomplete list
+
+	/**
+	  * This method hie the autocomplete list if it is deployed
+	  */
 	var hideAutocomplete = function() {
 		autocompleteDivElem.innerHTML = '';
 		// Set the display to none of the autocomplet list
 		autocompleteDivElem.classList.add('hd');
 	};
 
+	/**
+	  * Create and show the autocomplete list for the type and value given, and
+	  * using the SpotifyPlayerObj_Controller.createLinks methos, create the links
+	  * to the results
+	  *
+	  * @param inType <string>: The type of the element to search, the allowed types are:
+	  *	- album
+	  *	- artist
+	  *	- track
+	  * @param inValue <string>: The search string from the user
+	  *
+	  * @see SpotifyPlayerObj_Controller.createLinks
+	  */
 	var autocomplete = function(inType, inValue) {
 		if (currentAutocompleteReq !== null) {
 			currentAutocompleteReq.abort();
@@ -22,12 +46,14 @@ var SearchBox_Controller = (function () {
 
 		currentAutocompleteReq = apiConnectorObj_Tool.autocompleteSearch(inType, inValue, function(inParams) {
 			if (inParams.length > 0) {
+				// Create the list view with all the result params
 				var view = new TemplatesManager_Tool('autocomplete_list.tpl');
 
 				var htmlResult = view.process({
 					'results': inParams
 				});
 
+				// Create the links to the elements
 				htmlResult = SpotifyPlayerObj_Controller.createLinks(htmlResult);
 
 				selectedElem = null;
@@ -39,9 +65,15 @@ var SearchBox_Controller = (function () {
 		});
 	};
 
+	/**
+	  * Mark as selected one of the elements into the autocomplete list
+	  *
+	  * @param inLiElement <li DOM element>: The element to be selected
+	  */
 	var autocompleteSelectElement = function(inLiElement) {
 		var link = inLiElement.getElementsByClassName('info_link')[0];
 
+		// Te value on the searchbox cames from the autocomplete list
 		valueFromAutocomplete = true;
 		if (selectedElem !== null) {
 			selectedElem.classList.remove('selected');
@@ -63,10 +95,21 @@ var SearchBox_Controller = (function () {
 		return inLiElement;
 	};
 
+	/**
+	  * This methd is called when the users changes from a autocomplete list element
+	  * to another one
+	  *
+	  * @param inAction <str>: The movement action could be:
+	  *	- prev: The previous element, if the current element is the first theprev
+	  *		will be the last one
+	  *	- next: The next element, if the current element is the last, the next will be
+	  *		the first one
+	  */
 	var autocompleteChangeSelect = function(inAction) {
 		var elements = autocompleteDivElem.getElementsByClassName('autocomplete_result');
 
 		if (inAction == 'prev') {
+			// If we don't have any element previously selected, choose the first one
 			if (selectedElem === null) {
 				elements[elements.length - 1] = autocompleteSelectElement(elements[elements.length - 1]);
 			} else {
@@ -86,6 +129,7 @@ var SearchBox_Controller = (function () {
 				}
 			}
 		} else {
+			// If we don't have any element previously selected, choose the last one
 			if (selectedElem === null) {
 				elements[0] = autocompleteSelectElement(elements[0]);
 			} else {
@@ -105,6 +149,17 @@ var SearchBox_Controller = (function () {
 		}
 	};
 
+	/**
+	  * This method is called when the search form is submitted, and creates the view using
+	  * the SpotifyPlayerObj_Controller.showDetails method, the search controller do the rest
+	  * @see SpotifyPlayerObj_Controller.showDetails
+	  *
+	  * @param inType <string>: The type of the search could be:
+	  *	- artist
+	  *	- album
+	  *	- track
+	  * @param inValue <string>: The search string
+	  */
 	var search = function(inType, inValue) {
 		// If the value cames from the autocomplete (the info is yet loaded),
 		// or is an empy string, don't do anyting...
@@ -118,7 +173,11 @@ var SearchBox_Controller = (function () {
 		hideAutocomplete();
 	};
 
+	// Public
 	return {
+		/**
+		  * Add the corresponding listeners, this methos should be called after the document is loaded 
+		  */
 		bootstrap: function() {
 			var searchIcon = document.getElementById('search_link');
 			var searchTypeSel = document.getElementById('searchbox_type');
@@ -127,7 +186,7 @@ var SearchBox_Controller = (function () {
 			lastSearchBoxValue = searchBox.value;
 			defaultValue = searchBox.value;
 
-			// Add the events
+			// keyevents
 			searchBox.addEventListener('keyup', function(inEvent) {
 				switch(inEvent.keyCode) {
 					// Return key, submit
@@ -149,6 +208,7 @@ var SearchBox_Controller = (function () {
 						break;
 
 					default:
+						// Check if something is changed, after to anything
 						if (lastSearchBoxValue != searchBox.value) {
 							valueFromAutocomplete = false;
 							lastSearchBoxValue = searchBox.value;
@@ -177,6 +237,7 @@ var SearchBox_Controller = (function () {
 					searchBox.value = defaultValue;
 				}
 
+				// Wait 0.1s after close the autocomplete to leave the user click in the elements
 				setTimeout(hideAutocomplete, 100);
 			}, false);
 

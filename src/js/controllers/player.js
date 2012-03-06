@@ -69,7 +69,7 @@ var Player_Controller = (function () {
 		playPauseStopButt.classList.add('pause');
 		updateTimmer();
 	};
-i
+
 	/**
 	  * This method stop the current play and change the class for the
 	  * play pause image

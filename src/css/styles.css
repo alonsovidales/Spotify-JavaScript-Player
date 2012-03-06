@@ -201,7 +201,7 @@ img#trash_img {
 	background-position: -123px 0px;
 }
 
-.player_button.fordware {
+.player_button.forward {
 	background-position: -90px 0px;
 }
 
@@ -226,7 +226,7 @@ img#trash_img {
 	background-position: -123px -30px;
 }
 
-.player_button.fordware.disabled {
+.player_button.forward.disabled {
 	background-position: -90px -30px;
 }
 
