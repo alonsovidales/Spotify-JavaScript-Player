@@ -1,19 +1,40 @@
+/**
+  * Author: Alonso Vidales <alonso.vidales@tras2.es>
+  * Date: 2012-03-04
+  *
+  * Global singleton object used to controll the list of playlists
+  *
+  * This class extends from KeyValueStorage_Abstract_Tool
+  * 
+  * @see KeyValueStorage_Abstract_Tool -> js/tools/key_value_storage.js
+  *
+  */
+
 var PlaylistManager_Controller = (function() {
-	var ulElemList = null;
-	var lastUsedId = 0;
+	var ulElemList = null; // The DOM element of the list
+	var lastUsedId = 0; // The las used id to give a unique id to the new lists
 
 	// Public scope
 	var my = {
-		_objType: 'PlaylistManager_Controller',
-		_objId: 'main',
-		_values: null,
+		_objType: 'PlaylistManager_Controller', // Type of the object, KeyValueStorage_Abstract_Tool need this
+		_objId: 'main', // The unique id of this object KeyValueStorage_Abstract_Tool need this
+		_values: null, // The persistent values
 
+		/**
+		  * Used to add a playlist to another one (copy all
+		  * the tracks from the first one to the other one)
+		  *
+		  * @param inOriginId <int>: The unique id of the list to copy
+		  * @param inPlaylistId <int>: The unique id of the target list
+		  */
 		addPlayListToPlayList: function(inOriginId, inPlaylistId) {
 			var playListOrig = new Playlist_Controller(inOriginId);
-			var origTracks = playListOrig.getTracks();
 			var playListTarget = new Playlist_Controller(inPlaylistId);
 			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');
 
+			// Get all the tracks from the origin list, and iterate over all of them
+			// adding each one to the target list
+			var origTracks = playListOrig.getTracks();
 			for (track in origTracks) {
 				if (origTracks.hasOwnProperty(track)) {
 					playListTarget.addTrackWithInfo(origTracks[track]);
@@ -22,8 +43,10 @@ var PlaylistManager_Controller = (function() {
 				}
 			}
 
+			// Update the total number of tracks for this playlist
 			counter.innerHTML = this._values.playLists[inPlaylistId].totalTracks;
 
+			// Save the onfo into localStorage
 			this._saveObject();
 
 			// If the user have this list opened, refresh the view to include the new tracks
@@ -33,6 +56,9 @@ var PlaylistManager_Controller = (function() {
 			}
 		},
 
+		/**
+		  * 
+		  */
 		addAlbumToPlaylist: function(inAlbumHref, inPlaylistId) {
 			var playList = new Playlist_Controller(inPlaylistId);
 			var counter = document.getElementById('playlist_total_tracks_' + inPlaylistId + '_span');

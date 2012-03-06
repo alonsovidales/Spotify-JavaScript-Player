@@ -19,7 +19,7 @@ var Playlist_Controller = (function(inId) {
 
 	var my = {
 		_objType: 'Playlist_Controller', // Type of the object, KeyValueStorage_Abstract_Tool need this
-		_objId: inId, // The unique i of this object KeyValueStorage_Abstract_Tool need this
+		_objId: inId, // The unique id of this object KeyValueStorage_Abstract_Tool need this
 		_values: null, // The persistent values
 
 		/**
