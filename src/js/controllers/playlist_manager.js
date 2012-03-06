@@ -106,6 +106,26 @@ var PlaylistManager_Controller = (function() {
 			this._saveObject();
 			
 			return this;
+		},
+
+		editPlayList: function(inPlayListId) {
+			var playList = Playlist_Controller(inPlayListId);
+
+			new Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
+				var newName = document.getElementById('new_edit_list_name').value;
+				if (newName !== '') {
+					playList.setName(newName);
+
+					document.getElementById(inPlayListId + '_play_list_name_span').innerHTML = newName;
+
+					return true;
+				}
+
+				return false;
+			});
+
+			document.getElementById('new_edit_list_name').value = playList.getName();
+			document.getElementById('new_edit_list_name').focus();
 		}
 	};
 
@@ -125,7 +145,6 @@ var PlaylistManager_Controller = (function() {
 		}
 	};
 
-	// Provate scope
 	var addNewList = function() {
 		new Alert_Tool('List Name: <input type="text" id="new_edit_list_name" />', 'Save', 'Cancel', function() {
 			var name = document.getElementById('new_edit_list_name').value;

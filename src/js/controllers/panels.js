@@ -7,6 +7,20 @@ var PanelsObj_Controller = (function () {
 			var divContainer = document.createElement("div");
 			divContainer.innerHTML = inHtml;
 
+			var editPlaylistLinks = divContainer.getElementsByClassName('edit_playlist_link');
+
+			for (link in editPlaylistLinks) {
+				if (editPlaylistLinks[link].addEventListener !== undefined) {
+					editPlaylistLinks[link].addEventListener('click', function(inEvent) {
+						inEvent.preventDefault();
+
+						PlaylistManager_Controller.editPlayList(this.getAttribute('href'));
+	
+						return false;
+					}, false);
+				}
+			}
+
 			var playTrackLinks = divContainer.getElementsByClassName('play_track');
 
 			for (link in playTrackLinks) {
