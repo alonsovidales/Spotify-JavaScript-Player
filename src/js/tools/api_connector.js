@@ -13,21 +13,29 @@
   */
 
 var apiConnectorObj_Tool = (function () {
-	// This var will be used to store the information processed in order to don't
-	// need process it again
-	var cachedQueries = {};
+	var cachedQueries = {}; // Cache var to store the API results
 
 	/**
-	  * The formaters will be used in order to keep the coherence between the 
-	  * information that we get from the API and the data structure that we use,
-	  * according to an "Adapter Pattern"
+	  * The formaters are defined in order to keep the coherence between the 
+	  * information that we get from the API and the data structure that we need
+	  * "Adapter Pattern"
 	  *
-	  * Each value of the dictionari will be a function that will reciebe as input the
+	  * Each value of the dictionary will be a function that will reciebe as input the
 	  * an object with the API structure and should to return the structure to be used
 	  * internally
+	  *
+	  * @see: http://developer.spotify.com/en/metadata-api/
 	  */	
 	var adapters = {
-		'autocompleteAlbumSearch': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'type': 'album',
+		  *		'href': <str>, // The unique id of the album
+		  *		'name': <str> // The title of the album
+		  *	}
+		  */
+		autocompleteAlbumSearch: function(inParams) {
 			var results = [];
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.albums.length)); count++) {
@@ -41,7 +49,15 @@ var apiConnectorObj_Tool = (function () {
 			return results;
 		},
 
-		'autocompleteArtistSearch': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'type': 'artist',
+		  *		'href': <str>, // The unique id of the artist
+		  *		'name': <str> // The name artist
+		  *	}
+		  */
+		autocompleteArtistSearch: function(inParams) {
 			var results = [];
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.artists.length)); count++) {
@@ -55,7 +71,15 @@ var apiConnectorObj_Tool = (function () {
 			return results;
 		},
 
-		'autocompleteTrackSearch': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'type': 'track',
+		  *		'href': <str>, // The unique id of the track
+		  *		'name': <str> // The title of the track
+		  *	}
+		  */
+		autocompleteTrackSearch: function(inParams) {
 			var results = [];
 
 			for (var count = 0; ((count < config.autocompleteListLength) && (count < inParams.tracks.length)); count++) {
@@ -69,7 +93,22 @@ var apiConnectorObj_Tool = (function () {
 			return results;
 		},
 
-		'searchAlbum': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'name': <str>, // The title of the album
+		  *		'popularity': <int>, // The popularity in parts per unit
+		  *		'popularityUpToFive': <int>, // The popularity in a 0-5 scale
+		  *		'href': <str>, // The unique id of the album
+		  *		'artists': [{
+		  *			'href': <str>, // The unique id of the artist,
+		  *			'name': <str> // The artist name
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		searchAlbum: function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
 				'albums': []
@@ -98,7 +137,21 @@ var apiConnectorObj_Tool = (function () {
 			return result;
 		},
 
-		'searchArtist': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'numResults': <int>, // The total number of results
+		  *		'artists': [{
+		  *			'href': <str>, // The unique id of the artist,
+		  *			'name': <str> // The artist name
+		  *			'popularity': <int>, // The popularity in parts per unit
+		  *			'popularityUpToFive': <int>, // The popularity in a 0-5 scale
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		searchArtist: function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
 				'artists': []
@@ -116,7 +169,32 @@ var apiConnectorObj_Tool = (function () {
 			return result;
 		},
 
-		'searchTrack': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'numResults': <int>, // The total number of results
+		  *		'tracks': [{
+		  *			'albumReleased': <int>, // The year when the album was released
+		  *			'albumHref': <str>, // The unique id of the album,
+		  *			'albumName': <str> // The title of the album
+		  *			'name': <str>, // The name of the track
+		  *			'href': <str>, // The unique id of the track,
+		  *			'popularity': <int>, // The popularity in parts per unit
+		  *			'popularityUpToFive': <int>, // The popularity in a 0-5 scale
+		  *			'minSec': <str>, // The total time in a mm:ss format
+		  *			'length': <int>, // The total time in seconds
+		  *			'artists': [{
+		  *				'href': <str>, // The unique id of the artist
+		  *				'name': <str> // The name of the artist
+		  *			},
+		  *				...
+		  *			]
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		searchTrack: function(inParams) {
 			var result = {
 				'numResults': inParams.info.num_results,
 				'tracks': []
@@ -148,7 +226,33 @@ var apiConnectorObj_Tool = (function () {
 			return result;
 		},
 
-		'album': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'name': <int>, // The title of the album
+		  *		'artistName': <str>, // The name of the artis
+		  *		'artistHref': <str>, // The unique id of the artist,
+		  *		'released': <int>, // The year when the album was released
+		  *		'tracks': [{
+		  *			'available': <bool>, // True if the track is aviable, false if not
+		  *			'href': <str>, // The unique id of the track,
+		  *			'name': <str> // The title of the track
+		  *			'minSec': <str>, // The total time in a mm:ss format
+		  *			'length': <int>, // The total time in seconds
+		  *			'popularity': <int>, // The popularity in parts per unit
+		  *			'popularityUpToFive': <int>, // The popularity in a 0-5 scale
+		  *			'artists': [{
+		  *				'href': <str>, // The unique id of the artist
+		  *				'name': <str> // The name of the artist
+		  *			},
+		  *				...
+		  *			]
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		album: function(inParams) {
 			var result = {
 				'name': inParams.album.name,
 				'artistName': inParams.album.artist,
@@ -171,18 +275,32 @@ var apiConnectorObj_Tool = (function () {
 					'available': inParams.album.tracks[track].available,
 					'href': inParams.album.tracks[track].href,
 					'name': inParams.album.tracks[track].name,
-					'artists': artists,
 					'minSec': timeManagerObj_Tool.getMinSec(inParams.album.tracks[track].length),
 					'length': inParams.album.tracks[track].length,
 					'popularity': inParams.album.tracks[track].popularity,
-					'popularityUpToFive': Math.round(inParams.album.tracks[track].popularity * 5)
+					'popularityUpToFive': Math.round(inParams.album.tracks[track].popularity * 5),
+					'artists': artists
 				});
 			}
 
 			return result;
 		},
 
-		'artist': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'name': <int>, // The title of the album
+		  *		'albums': [{
+		  *			'href': <str>, // The unique id of the track,
+		  *			'name': <str> // The title of the track
+		  *			'artists': <str>, // The name of the artist
+		  *			'artistHref': <str> // The unique id of the artist
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		artist: function(inParams) {
 			var result = {
 				'name': inParams.artist.name,
 				'albums': []};
@@ -199,7 +317,27 @@ var apiConnectorObj_Tool = (function () {
 			return result;
 		},
 
-		'track': function(inParams) {
+		/**
+		  * Must return the next structure:
+		  * 	{
+		  *		'available': <bool>, // True if the track is aviable, false if not
+		  *		'popularity': <int>, // The popularity in parts per unit
+		  *		'popularityUpToFive': <int>, // The popularity in a 0-5 scale
+		  *		'length': <int>, // The total time in seconds
+		  *		'minSec': <str>, // The total time in a mm:ss format
+		  *		'name': <str>, // The title of the album
+		  *		'albumReleased': <int>, // The year when the album was released
+		  *		'albumHref': <str>, // The unique indentifier of the album
+		  *		'albumName': <str>, // The album title
+		  *		'artists': [{
+		  *			'href': <str>, // The unique id of the artist,
+		  *			'name': <str> // The title of the artist
+		  *		},
+		  *			...
+		  *		]
+		  *	}
+		  */
+		track: function(inParams) {
 			var result = {
 				'available': inParams.track.available,
 				'popularity': inParams.track.popularity,
@@ -207,10 +345,10 @@ var apiConnectorObj_Tool = (function () {
 				'length': inParams.track.length,
 				'minSec': timeManagerObj_Tool.getMinSec(inParams.track.length),
 				'name': inParams.track.name,
-				'artists': [],
 				'albumReleased': inParams.track.album.released,
 				'albumHref': inParams.track.album.href,
-				'albumName': inParams.track.album.name
+				'albumName': inParams.track.album.name,
+				'artists': []
 			};
 
 			for (artist in inParams.track.artists) {
@@ -224,13 +362,31 @@ var apiConnectorObj_Tool = (function () {
 		}
 	};
 
+	/**
+	  * This method is used to do the queries to the API server, handle the possible
+	  * exceptions, and return the result if success as an object.
+	  * A dictionary is used as cache to don't do more than a time the same query
+	  *
+	  * @param inUrl <string>: The API url to be called
+	  * @param inCacheKey <string>: The unique cache key to be used in order to
+	  *	distinct the results from the API
+	  * @param inAdapter <string>: The name of the adapter to be used, see local adapters var
+	  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+	  * @param inCallBack <function>: The function to be called when the request success
+	  *
+	  * @return <mixed>:
+	  *	XMLHttpRequest object: If the query is not cached
+	  *	null: The query is cached, and we don't need to do the request again
+	  */
 	var doAjaxRequest = function(inUrl, inCacheKey, inAdapter, inAsync, inCallBack) {
+		// Check if we have cached the query, and is we have it, return the info directly
 		if (cachedQueries[inCacheKey] !== undefined) {
 			inCallBack(cachedQueries[inCacheKey]);
 
 			return null;
 		}
 
+		// The image to indicate to the user that the system is working
 		document.getElementById('api_loading_img').classList.remove('hd');
 
 		var xhr = new XMLHttpRequest();
@@ -243,6 +399,8 @@ var apiConnectorObj_Tool = (function () {
 			switch (this.status) {
 				case 200:
 				case 304:
+					// Parse the result, call to the adapter, store the result in the
+					// cache, and call to the callback function
 					var data = JSON.parse(this.response);
 					cachedQueries[inCacheKey] = adapters[inAdapter](data);
 
@@ -270,6 +428,19 @@ var apiConnectorObj_Tool = (function () {
 		return xhr;
 	};
 
+	/**
+	  * Perare and do the lookup request to eh API.
+	  * @see http://developer.spotify.com/en/metadata-api/lookup/
+	  *
+	  * @param inTypeAdapter <string>: The adapter to be used, see local var adapters
+	  * @param inId <string>: The unique identifier for the element that we want to obtain
+	  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+	  * @param inCallBack <function>: The function to be called when the request success
+	  *
+	  * @return <mixed>:
+	  *	XMLHttpRequest object: If the query is not cached
+	  *	null: The query is cached, and we don't need to do the request again
+	  */
 	var doApiLookupRequest = function(inTypeAdapter, inId, inAsync, inCallBack) {
 		if (inId === '') {
 			return null;
@@ -294,10 +465,19 @@ var apiConnectorObj_Tool = (function () {
 	};
 
 	/**
-	  * This method encapsulates all the search requests,
-	  * all have the same structure, only changes the type
-	  * and the response from the server, that should be 
-	  * processed by the methos who calls this
+	  * Perare and do the search request to eh API.
+	  * @see http://developer.spotify.com/en/metadata-api/search/
+	  *
+	  * @param inCallBack <string>: The type of search that we are doing, used only for the cache key
+	  * @param inQuery <string>: Query string that we want to do
+	  * @param inPage <int>: The number of page to be loaded
+	  * @param inAdapter <string>: The name of the adapter to be used, see local var adapters
+	  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+	  * @param inCallBack <function>: The function to be called when the request success
+	  *
+	  * @return <mixed>:
+	  *	XMLHttpRequest object: If the query is not cached
+	  *	null: The query is cached, and we don't need to do the request again
 	  */
 	var doApiSearchRequest = function(inType, inQuery, inPage, inAdapter, inAsync, inCallBack) {
 		if (inQuery === '') {
@@ -311,18 +491,75 @@ var apiConnectorObj_Tool = (function () {
 	};
 
 	return {
+		/**
+		  * Used to get a list of albums from a given string
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.searchAlbum to know the structure used on the callback function
+		  *
+		  * @param inSearchStr <str>: The search string
+		  * @param inPage <int>: The page number to be loaded
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		searchAlbums: function(inSearchStr, inPage, inAsync, inCallBack) {
 			return doApiSearchRequest('album', inSearchStr, inPage, 'searchAlbum', inAsync, inCallBack);
 		},
 
+		/**
+		  * Used to get a list of artists from a given string
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.searchArtist to know the structure used on the callback function
+		  *
+		  * @param inSearchStr <str>: The search string
+		  * @param inPage <int>: The page number to be loaded
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		searchArtists: function(inSearchStr, inPage, inAsync, inCallBack) {
 			return doApiSearchRequest('artist', inSearchStr, inPage, 'searchArtist', inAsync, inCallBack);
 		},
 
+		/**
+		  * Used to get a list of tracks from a given string
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.searchTrack to know the structure used on the callback function
+		  *
+		  * @param inSearchStr <str>: The search string
+		  * @param inPage <int>: The page number to be loaded
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		searchTracks: function(inSearchStr, inPage, inAsync, inCallBack) {
 			return doApiSearchRequest('track', inSearchStr, inPage, 'searchTrack', inAsync, inCallBack);
 		},
 
+		/**
+		  * Factory method, depends of the inType parameter loads a kind of info, the structure used for the
+		  * inCallBack function will be always the same, this methos id always asynchronous
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.autocompleteAlbumSearch, adapter.autocompleteArtistSearch,
+		  *	adapter.autocompleteTrackSearch to know the structure used on the callback function
+		  *
+		  * @param inType <str>: The type of item to be searched for
+		  * @param inSearchStr <str>: The search string
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		autocompleteSearch: function(inType, inSearchStr, inCallBack) {
 			switch (inType) {
 				case 'album':
@@ -341,14 +578,52 @@ var apiConnectorObj_Tool = (function () {
 			return doApiSearchRequest(inType, inSearchStr, 1, adapter, true, inCallBack);
 		},
 
+		/**
+		  * Returns the complete information about the album with the unique identifier inAlbumId
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.album to know the structure used on the callback function
+		  *
+		  * @param inAlbumId <str>: Unique identifier of the album
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		getAlbumInfo: function(inAlbumId, inAsync, inCallBack) {
 			return doApiLookupRequest('album', inAlbumId, inAsync, inCallBack);
 		},
 
+		/**
+		  * Returns the complete information about the artist with the unique identifier inArtistId
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.artist to know the structure used on the callback function
+		  *
+		  * @param inArtistId <str>: Unique identifier of the artist
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		getArtistInfo: function(inArtistId, inAsync, inCallBack) {
 			return doApiLookupRequest('artist', inArtistId, inAsync, inCallBack);
 		},
 
+		/**
+		  * Do the query to the API and after process all call to the passed inCallBack function
+		  * @see local var adapter.track to know the structure used
+		  *
+		  * @param inTrackId <str>: Unique identifier of the track
+		  * @param inAsync <bool>: If true the call will be asynchronous, if false synchronous
+		  * @param inCallBack <function>: The function to be called when the request success
+		  *
+		  * @return <mixed>:
+		  *	XMLHttpRequest object: If the query is not cached
+		  *	null: The query is cached, and we don't need to do the request again
+		  */
 		getTrackInfo: function(inTrackId, inAsync, inCallBack) {
 			return doApiLookupRequest('track', inTrackId, inAsync, inCallBack);
 		}
