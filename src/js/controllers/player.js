@@ -17,27 +17,15 @@ var Player_Controller = (function () {
 
 	var timmerInterval = 1000;
 
-	var resetPlayer = function() {
-		if (currentTimmer !== null) {
-			clearTimeout(currentTimmer);
-		}
-		trackNameEl.innerHTML = ' -- -- ';
-		timerEl.innerHTML = '--:--';
-
-		rewindButt.classList.add('disabled');
-		fordwareButt.classList.add('disabled');
-		playPauseStopButt.classList.add('disabled');
-	};
-
 	var updateTimmer = function() {
 		if (timeLeft < 1) {
-			playNext();
+			my.playNext();
 		}
 		if (timeLeft > totalTrackLength) {
-			playPrev();
+			my.playPrev();
 		}
 
-		var seconds = Math.round(timeLeft % 60) - 1;
+		var seconds = Math.round(timeLeft % 60);
 		var mins = Math.floor(timeLeft / 60);
 
 		if (mins < 10) {
@@ -75,35 +63,69 @@ var Player_Controller = (function () {
 		}
 	};
 
-	var playPrev = function() {
-		if (playList.getTracksInfo(currentTrackId - 1) !== null) {
-			my.playTrack(currentPlaylistId, currentTrackId - 1);
-		} else {
-			my.playTrack(currentPlaylistId, playList.getNumTracks() - 1);
-		}
-	};
-
-	var playNext = function() {
-		if (playList.getTracksInfo(currentTrackId + 1) !== null) {
-			my.playTrack(currentPlaylistId, currentTrackId + 1);
-		} else {
-			my.playTrack(currentPlaylistId, 0);
-		}
-	};
-
 	var my = {
+		playPrev: function() {
+			if (playList.getTracksInfo(currentTrackId - 1) !== null) {
+				my.playTrack(currentPlaylistId, currentTrackId - 1);
+			} else {
+				my.playTrack(currentPlaylistId, playList.getNumTracks() - 1);
+			}
+		},
+
+		playNext: function() {
+			if (playList.getTracksInfo(currentTrackId + 1) !== null) {
+				my.playTrack(currentPlaylistId, currentTrackId + 1);
+			} else {
+				my.playTrack(currentPlaylistId, 0);
+			}
+		},
+
+		updateCurrentTrack: function(inTrackId) {
+			if (inTrackId < currentTrackId) {
+				currentTrackId--;
+			}
+		},
+
+		getCurrentTrackList: function () {
+			return {
+				'playlist': currentPlaylistId,
+				'track': currentTrackId
+			};
+		},
+
+		resetPlayer: function() {
+			if (currentTimmer !== null) {
+				clearTimeout(currentTimmer);
+			}
+			trackNameEl.innerHTML = ' -- -- ';
+			timerEl.innerHTML = '--:--';
+	
+			rewindButt.classList.add('disabled');
+			fordwareButt.classList.add('disabled');
+			playPauseStopButt.classList.add('disabled');
+		},
+
 		playTrack: function(inPlaylistId, inTrackId) {
+			var oldPlayListId = currentPlaylistId;
+			var oldTrackId = currentTrackId;
 			currentPlaylistId = inPlaylistId;
 			currentTrackId = parseInt(inTrackId, 10);
 
 			playList = new Playlist_Controller(inPlaylistId);
-
 			currentTrackInfo = playList.getTracksInfo(currentTrackId);
 			if (currentTrackInfo === null) {
-				resetPlayer();
+				this.resetPlayer();
 
 				return false;
 			}
+
+			if (oldPlayListId !== null) {
+				var oldPlayList = new Playlist_Controller(oldPlayListId);
+				oldPlayList.unsetSpeackerIcon();
+				oldPlayList.unsetTrackSpeackerIcon(oldTrackId);
+			}
+			playList.setSpeackerIcon();
+			playList.setTrackSpeackerIcon(inTrackId);
 
 			var name = currentTrackInfo.name;
 			if (name.length > 23) {
@@ -133,7 +155,7 @@ var Player_Controller = (function () {
 			timerEl = document.getElementById('player_timmer_div');
 			trackNameEl = document.getElementById('player_title_div');
 
-			resetPlayer();
+			this.resetPlayer();
 
 			var revFordTimeout = null;
 			rewindButt.addEventListener('mousedown', function(inEvent) {
@@ -157,7 +179,7 @@ var Player_Controller = (function () {
 				}
 				if (!rewFord) {
 					if (!this.classList.contains('disabled')) {
-						playPrev();
+						my.playPrev();
 					}
 				}
 
@@ -172,7 +194,7 @@ var Player_Controller = (function () {
 				}
 				if (!rewFord) {
 					if (!this.classList.contains('disabled')) {
-						playNext();
+						my.playNext();
 					}
 				}
 

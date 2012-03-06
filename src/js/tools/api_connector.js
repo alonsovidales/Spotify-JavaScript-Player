@@ -13,7 +13,7 @@ var apiConnectorObj_Tool = (function () {
 	};
 
 	var getMinSec = function(inTime) {
-		return pad(Math.floor(inTime / 60), 2) + ':' + pad(Math.floor(inTime % 60), 2);
+		return pad(Math.round(inTime / 60), 2) + ':' + pad(Math.floor(inTime % 60), 2);
 	};
 
 	/**
