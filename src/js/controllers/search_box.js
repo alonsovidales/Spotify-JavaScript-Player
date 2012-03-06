@@ -1,6 +1,7 @@
 var SearchBox_Controller = (function () {
 	var defaultValue = '';
 	var currentAutocompleteReq = null;
+	var selectedElem = null;
 	var autocompleteDivElem = null;
 	var searchBox = null;
 	var lastSearchBoxValue = '';
@@ -41,27 +42,28 @@ var SearchBox_Controller = (function () {
 		var link = inLiElement.getElementsByClassName('info_link')[0];
 
 		valueFromAutocomplete = true;
+		if (selectedElem !== null) {
+			selectedElem.classList.remove('selected');
+		}
+
 		inLiElement.classList.add('selected');
+
+		selectedElem = inLiElement;
 		searchBox.value = link.innerHTML;
 		lastSearchBoxValue = link.innerHTML;
 
 		// Create a new threat to don't damage the user experience
-		setTimeout(PanelsObj_Controller.showDetails(
-			link.getAttribute('type'),
-			link.getAttribute('href')), false, 1);
+		setTimeout(function() {
+			PanelsObj_Controller.showDetails(
+				link.getAttribute('type'),
+				link.getAttribute('href'));
+		}, false, 1);
 
 		return inLiElement;
 	};
 
 	var autocompleteChangeSelect = function(inAction) {
-		var selectedElem = autocompleteDivElem.getElementsByClassName('selected');
 		var elements = autocompleteDivElem.getElementsByClassName('autocomplete_result');
-
-		if (selectedElem.length > 0) {
-			selectedElem = selectedElem[0];
-		} else {
-			selectedElem = null;
-		}
 
 		if (inAction == 'prev') {
 			if (selectedElem === null) {
@@ -73,14 +75,14 @@ var SearchBox_Controller = (function () {
 					if (selectedElem == elements[pos]) {
 						if (prev !== null) {
 							prev = autocompleteSelectElement(prev);
+						} else {
+							elements[elements.length - 1] = autocompleteSelectElement(elements[elements.length - 1]);
 						}
 						break;
 					}
 
 					prev = elements[pos];
 				}
-	
-				selectedElem.classList.remove('selected');
 			}
 		} else {
 			if (selectedElem === null) {
@@ -90,14 +92,14 @@ var SearchBox_Controller = (function () {
 					if (selectedElem == elements[element]) {
 						if (elements[parseInt(element, 10) + 1] !== undefined) {
 							elements[parseInt(element, 10) + 1] = autocompleteSelectElement(elements[parseInt(element, 10) + 1]);
+						} else {
+							elements[0] = autocompleteSelectElement(elements[0]);
 						}
 						break;
 					}
 	
 					prev = elements[element];
 				}
-
-				selectedElem.classList.remove('selected');
 			}
 		}
 	};
@@ -129,16 +131,19 @@ var SearchBox_Controller = (function () {
 				switch(inEvent.keyCode) {
 					// Return key, submit
 					case 13:
+						inEvent.preventDefault();
 						search(searchTypeSel.value, searchBox.value);
 						break;
 
 					// Down
 					case 40:
+						inEvent.preventDefault();
 						autocompleteChangeSelect('next');
 						break;
 
 					// Up
 					case 38:
+						inEvent.preventDefault();
 						autocompleteChangeSelect('prev');
 						break;
 

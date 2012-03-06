@@ -135,7 +135,6 @@ var PlaylistManager_Controller = (function() {
 	var renderList = function(inPlayLists) {
 		for (playList in inPlayLists) {
 			var playListCont = new Playlist_Controller(inPlayLists[playList].id);
-			console.log(inPlayLists[playList].id);
 			inPlayLists[playList].name = playListCont.getName();
 
 			var view = new TemplatesManager_Tool('playlists_list.tpl');
