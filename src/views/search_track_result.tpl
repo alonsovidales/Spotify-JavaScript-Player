@@ -18,7 +18,7 @@ Total tracks found #numResults#
 				Popularity: <div class="popularity score_#track.popularityUpToFive#"></div>
 			</li>
 			<li>
-				Album: <a href="#track.albumHref#" type="track" class="info_link track_link">#track.albumName# (#track.albumReleased#)</a>
+				Album: <a href="#track.albumHref#" type="album" class="info_link track_link">#track.albumName# (#track.albumReleased#)</a>
 			</li>
 			<li>
 				<ul>

@@ -55,6 +55,9 @@ var Player_Controller = (function () {
 			timeLeft--;
 		}
 
+		if (currentTimmer !== null) {
+			clearTimeout(currentTimmer);
+		}
 		currentTimmer = setTimeout(updateTimmer, timmerInterval);
 	};
 
@@ -96,6 +99,12 @@ var Player_Controller = (function () {
 			playList = new Playlist_Controller(inPlaylistId);
 
 			currentTrackInfo = playList.getTracksInfo(currentTrackId);
+			if (currentTrackInfo === null) {
+				resetPlayer();
+
+				return false;
+			}
+
 			var name = currentTrackInfo.name;
 			if (name.length > 23) {
 				name = name.substr(0, 23) + '...';
@@ -104,10 +113,6 @@ var Player_Controller = (function () {
 			trackNameEl.innerHTML = name;
 			timeLeft = currentTrackInfo.length;
 			totalTrackLength = currentTrackInfo.length;
-
-			if (currentTimmer !== null) {
-				clearTimeout(currentTimmer);
-			}
 
 			updateTimmer();
 
@@ -130,8 +135,9 @@ var Player_Controller = (function () {
 
 			resetPlayer();
 
+			var revFordTimeout = null;
 			rewindButt.addEventListener('mousedown', function(inEvent) {
-				setTimeout(function() {
+				revFordTimeout = setTimeout(function() {
 					playFordware = true;
 					timmerInterval = 200;
 					rewFord = true;
@@ -139,13 +145,16 @@ var Player_Controller = (function () {
 			}, false);
 
 			fordwareButt.addEventListener('mousedown', function(inEvent) {
-				setTimeout(function() {
+				revFordTimeout = setTimeout(function() {
 					timmerInterval = 200;
 					rewFord = true;
 				}, 800);
 			}, false);
 
 			rewindButt.addEventListener('click', function(inEvent) {
+				if (revFordTimeout !== null) {
+					clearTimeout(revFordTimeout);
+				}
 				if (!rewFord) {
 					if (!this.classList.contains('disabled')) {
 						playPrev();
@@ -158,6 +167,9 @@ var Player_Controller = (function () {
 			}, false);
 
 			fordwareButt.addEventListener('click', function(inEvent) {
+				if (revFordTimeout !== null) {
+					clearTimeout(revFordTimeout);
+				}
 				if (!rewFord) {
 					if (!this.classList.contains('disabled')) {
 						playNext();
