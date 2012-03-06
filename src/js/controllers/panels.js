@@ -183,55 +183,59 @@ var PanelsObj_Controller = (function () {
 		},
 
 		showDetails: function(inType, inId, inAppend, inPage) {
-			currentMainContentView = {
-				'type': inType,
-				'id': inId,
-				'append': inAppend,
-				'page': inPage};
+			// Create the view, links, etc in a new thread for a better user experience
+			var my = this;
+			setTimeout(function () {
+				currentMainContentView = {
+					'type': inType,
+					'id': inId,
+					'append': inAppend,
+					'page': inPage};
+	
+				var controller = null;
+	
+				switch (inType) {
+					case 'searchResult_album':
+						controller = new SearchAlbumResult_Controller(inId);
+						break;
+	
+					case 'searchResult_track':
+						controller = new SearchTrackResult_Controller(inId);
+						break;
+	
+					case 'searchResult_artist':
+						controller = new SearchArtistResult_Controller(inId);
+						break;
+	
+					case 'album':
+						controller = new Album_Controller(inId);
+						break;
+	
+					case 'track':
+						controller = new Track_Controller(inId);
+						break;
+	
+					case 'artist':
+						controller = new Artist_Controller(inId);
+						break;
+	
+					case 'playlist':
+						controller = new Playlist_Controller(inId);
+						break;
+				}
 
-			var controller = null;
+				view = my.createLinks(controller.getDetailView(inPage));
 
-			switch (inType) {
-				case 'searchResult_album':
-					controller = new SearchAlbumResult_Controller(inId);
-					break;
+				if (!inAppend) {
+					mainContentEl.innerHTML = '';
+				}
 
-				case 'searchResult_track':
-					controller = new SearchTrackResult_Controller(inId);
-					break;
-
-				case 'searchResult_artist':
-					controller = new SearchArtistResult_Controller(inId);
-					break;
-
-				case 'album':
-					controller = new Album_Controller(inId);
-					break;
-
-				case 'track':
-					controller = new Track_Controller(inId);
-					break;
-
-				case 'artist':
-					controller = new Artist_Controller(inId);
-					break;
-
-				case 'playlist':
-					controller = new Playlist_Controller(inId);
-					break;
-			}
-
-			view = this.createLinks(controller.getDetailView(inPage));
-
-			if (!inAppend) {
-				mainContentEl.innerHTML = '';
-			}
-
-			mainContentEl.appendChild(view);
-
-			if (controller.getDetailViewPostProcessor !== undefined) {
-				controller.getDetailViewPostProcessor();
-			}
+				mainContentEl.appendChild(view);
+	
+				if (controller.getDetailViewPostProcessor !== undefined) {
+					controller.getDetailViewPostProcessor();
+				}
+			}, 1);
 		},
 
 		bootstrap: function() {
